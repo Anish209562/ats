@@ -345,7 +345,7 @@ table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
      $limit=25;
     $last= $startPage = isset($_GET['li']) ? (int)$_GET['li'] : 1;
     $off=($last - 1)*$limit;
-    $s1=mysqli_query($host,"SELECT $tcolList FROM `client` WHERE subdomain='$subdomain' $tt ORDER BY date desc limit $off,$limit");  
+    $s1=mysqli_query($host,"SELECT $tcolList FROM `client` WHERE subdomain='$subdomain' $tt ORDER BY id desc limit $off,$limit");  
 
     while ($d1 = mysqli_fetch_array($s1)) { 
         

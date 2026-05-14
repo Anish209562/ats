@@ -25,7 +25,7 @@ $typee=$_POST['type'];
                </div>
                <input type="hidden" id="hiddenSelectedId_job" name="selectedValues" value=""/>
                <input type="hidden" id="hiddenSelectedIdsSorry" name="selectedValues2" value=""/>
-                    <table class="subTLV21 table-striped" cellpadding="0" cellspacing="0" style="width:100% !important;" id="subTLV21">
+                    <table class="subTLV22 table-striped" cellpadding="0" cellspacing="0" style="width:100% !important;" id="subTLV22">
                          <thead>
                             <tr>
                                  <th style="padding: 8px 10px !important;">
@@ -179,7 +179,7 @@ $sal2=$d2['salary_max'];
                </div>
                <input type="hidden" id="hiddenSelectedId_job" name="selectedValues" value="">
                <input type="hidden" id="hiddenSelectedIdsSorry" name="selectedValues2" value=""/>
-                 <table class="table-striped" cellpadding="0" cellspacing="0" id="subTLV21" style="width:100% !important;">
+                 <table class="table-striped" cellpadding="0" cellspacing="0" id="subTLV22" style="width:100% !important;">
                          <thead>
                             <tr>
                                 <th style="padding: 8px 10px !important;">
@@ -373,7 +373,7 @@ $("#exportbtn").on("click",function (){
     return;
   }
 
-  let table = document.getElementById("subTLV21");
+  let table = document.getElementById("subTLV22");
 
   // get headers (skip the checkbox column header)
   let headers = Array.from(table.querySelectorAll("thead th"))
@@ -404,14 +404,14 @@ $("#exportbtn").on("click",function (){
   document.body.removeChild(link);
 });
 
-if ($.fn.DataTable.isDataTable('#subTLV21')) {
-    $('#subTLV21').DataTable().destroy();
-}
-new DataTable('#subTLV21', {
-        scrollX: true,
-        ordering: false,
-        searching: false,lengthChange: false
-});
+// if ($.fn.DataTable.isDataTable('#subTLV22')) {
+//     $('#subTLV22').DataTable().destroy();
+// }
+// new DataTable('#subTLV22', {
+//         scrollX: true,
+//         ordering: false,
+//         searching: false,lengthChange: false
+// });
         
 });
 

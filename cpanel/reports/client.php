@@ -9,8 +9,7 @@
 
         <!-- META DATA -->
 		<meta charset="UTF-8">
-		<base href="/Meraqui/cpanel/" />
-		
+	
         <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="Description" content="KAiZEN  KCC Card community System - Add Client">
@@ -21,48 +20,48 @@
 		<title> Client REPORTS </title>
 
         <!-- FAVICON -->
-        <link rel="icon" href="build/assets/images/brand-logos/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="../build/assets/images/brand-logos/favicon.ico" type="image/x-icon">
 
         <!-- BOOTSTRAP CSS -->
-	    <link  id="style" href="build/assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	    <link  id="style" href="../build/assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- ICONS CSS -->
-        <link href="build/assets/icon-fonts/icons.css" rel="stylesheet">
+        <link href="../build/assets/icon-fonts/icons.css" rel="stylesheet">
         
         <!-- APP SCSS -->
-        <link rel="preload" as="style" href="build/assets/app-fce3f544.css" /><link rel="stylesheet" href="build/assets/app-fce3f544.css" />
+        <link rel="preload" as="style" href="../build/assets/app-fce3f544.css" /><link rel="stylesheet" href="../build/assets/app-fce3f544.css" />
 
         <!-- NODE WAVES CSS -->
-        <link href="build/assets/libs/node-waves/waves.min.css" rel="stylesheet"> 
+        <link href="../build/assets/libs/node-waves/waves.min.css" rel="stylesheet"> 
 
         <!-- SIMPLEBAR CSS -->
-        <link rel="stylesheet" href="build/assets/libs/simplebar/simplebar.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/simplebar/simplebar.min.css">
 
         <!-- COLOR PICKER CSS -->
-        <link rel="stylesheet" href="build/assets/libs/flatpickr/flatpickr.min.css">
-        <link rel="stylesheet" href="build/assets/libs/%40simonwep/pickr/themes/nano.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/flatpickr/flatpickr.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/%40simonwep/pickr/themes/nano.min.css">
 
         <!-- CHOICES CSS -->
-        <link rel="stylesheet" href="build/assets/libs/choices.js/public/assets/styles/choices.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/choices.js/public/assets/styles/choices.min.css">
 
         <!-- CHOICES JS -->
-        <script src="build/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+        <script src="../build/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
 
         <!-- MAIN JS -->
-        <script src="build/assets/main.js"></script>
+        <script src="../build/assets/main.js"></script>
 
          
         <!-- QUILL CSS -->
-        <link rel="stylesheet" href="build/assets/libs/quill/quill.snow.css">
-        <link rel="stylesheet" href="build/assets/libs/quill/quill.bubble.css">
+        <link rel="stylesheet" href="../build/assets/libs/quill/quill.snow.css">
+        <link rel="stylesheet" href="../build/assets/libs/quill/quill.bubble.css">
 
         <!-- FILEPOND CSS -->
-        <link rel="stylesheet" href="build/assets/libs/filepond/filepond.min.css">
-        <link rel="stylesheet" href="build/assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css">
-        <link rel="stylesheet" href="build/assets/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/filepond/filepond.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.css">
 
         <!-- DATE & TIME PICKER CSS -->
-        <link rel="stylesheet" href="build/assets/libs/flatpickr/flatpickr.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/flatpickr/flatpickr.min.css">
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css">
          <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.0/css/dataTables.bootstrap5.css">
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.js"></script> 
@@ -318,7 +317,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
    <span id="output"></span>
         
         <div id="loader">
-			<img src="build/assets/images/media/loader.svg" alt="">
+			<img src="../build/assets/images/media/loader.svg" alt="">
 		</div>
 	
           <div class="page" style="justify-content: start !important;">
@@ -614,11 +613,11 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
         <div id="responsive-overlay"></div>
  
         <!-- DATE & TIME PICKER JS -->
-        <script src="build/assets/libs/flatpickr/flatpickr.min.js"></script>
+        <script src="../build/assets/libs/flatpickr/flatpickr.min.js"></script>
 
         <!-- BOOTSTRAP JS -->
-        <script src="build/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-   <script src="build/assets/libs/apexcharts/apexcharts.min.js"></script>
+        <script src="../build/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+   <script src="../build/assets/libs/apexcharts/apexcharts.min.js"></script>
 
         <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
         

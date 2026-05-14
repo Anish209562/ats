@@ -17,7 +17,7 @@ if ($hasCustom) {
     $tcolList = $customRow['tcolumn'];
 
 } else {
-    $showColumn = ['id','job_code','job_title','start_job','assigned','status','client','date','ltime', 'createname']; // <-- your choices
+    $showColumn = ['job_code','job_title','start_job','assigned','status','client','date','ltime', 'createname']; // <-- your choices
 
     $sql = "SHOW FULL COLUMNS FROM `job`";
     $res = mysqli_query($host, $sql);
@@ -51,10 +51,15 @@ if ($searchType === 1) {
     }
 } else if ($searchType === 2) {
         $filters = isset($_POST['filters']) ? json_decode($_POST['filters'], true) : [];
-        foreach ($filters as $col => $values) {
-        $escaped = array_map(fn($v) => "'" . mysqli_real_escape_string($host, $v) . "'", $values);
-        $tt .= " AND $col IN (" . implode(',', $escaped) . ")";
+        
+    foreach ($filters as $col => $values) {
+    if (!is_array($values) || count($values) === 0) {
+        continue; // skip empty filter
     }
+
+    $escaped = array_map(fn($v) => "'" . mysqli_real_escape_string($host, $v) . "'", $values);
+    $tt .= " AND $col IN (" . implode(',', $escaped) . ")";
+}
 }
 
 // job post status
@@ -591,7 +596,7 @@ table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
     $limit=10;
     $last= $startPage= isset($_POST['li']) ? (int)$_POST['li'] : 1;
     $off=($last - 1)*$limit;
-    $query="select $tcolList from job where subdomain='$subdomain' $tt order by date desc limit $off,$limit";
+    $query="select id,$tcolList from job where subdomain='$subdomain' $tt ORDER BY CAST(SUBSTRING_INDEX(job_code, '-', -1) AS UNSIGNED) DESC limit $off,$limit";
     $s1=mysqli_query($host,$query);  
 
     while ($d1 = mysqli_fetch_array($s1)) {
@@ -651,7 +656,7 @@ table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
                  $full = htmlspecialchars($d1[$col]);
                  $short = (strlen($full) > $maxLen) ? substr($full,0,$maxLen).'...' : $full;
                  $tooltip = (strlen($full) > $maxLen) ? ' data-bs-toggle="tooltip" data-bs-original-title="'.$full.'"' : '';
-                 echo '<span '.$tooltip.'>'.$short ? $short : 'N/A'.'</span>';
+                 echo '<span '.$tooltip.'>'.($short ? $short : 'N/A').'</span>';
                 break;
         }
         ?>
@@ -731,212 +736,223 @@ table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
     window.columnOptions = <?= json_encode($columnOptions, JSON_UNESCAPED_UNICODE); ?>;
 </script>
 <script>
+window.columnOptions = <?= json_encode($columnOptions, JSON_UNESCAPED_UNICODE); ?>;
 var table;
-window.currentFilters = {}; // global for dropdown filters only
-window.currentPage = 1;
-window.searchType ='';
+window.currentFilters = window.currentFilters || <?= $searchType === 2 && !empty($filters) ? json_encode($filters) : '{}' ?>;
+window.currentPage = <?= $last ?>;
+window.searchType = <?= $searchType ?>;
+var selectedCol = "<?= $column ?? 'null' ?>"; // Store selected column for simple search
 
 function initDataTable() {
-DataTable.ext.search = [];
-if (DataTable.isDataTable('#myTable')) {
-        $('#myTable').DataTable().clear().destroy();
-        $('#myTable').find('.filter-container').remove();
-        $('#myTable').removeAttr('style'); // remove inline width styles
-}
-
-DataTable.ext.search.push(function (settings, data, dataIndex) {
-    const api = new DataTable.Api(settings);
-    const activeFilters = $(api.table().node()).data("activeFilters");
-
-    if (!activeFilters) return true;
-
-    for (const columnKey in activeFilters) {
-        const selected = activeFilters[columnKey];
-        if (selected.length > 0) {
-            const colIndex = api.columns().indexes().filter(function (idx) {
-                return $(api.column(idx).header()).data("col") === columnKey;
-            })[0];
-
-            const cellValue = $('<div>').html(data[colIndex]).text().trim();
-
-            if (!selected.includes(cellValue)) {
-                return false;
-            }
-        }
+    // 1. Destroy existing instance if it exists
+    if (DataTable.isDataTable('#myTable')) {
+        $('#myTable').DataTable().destroy();
     }
-    return true;
-});
-$('#myTable colgroup').slice(1).remove();
-
-table = new DataTable('#myTable', {
+    
+    $('#myTable colgroup').remove();
+    $('#myTable').removeAttr('style');
+    
+    table = new DataTable('#myTable', {
         ordering: false,
-        paging:false,
-        searching: true,
+        paging: false,
+        searching: false, // Server-side search used
         info: false,
         lengthChange: false,
         dom: 'lrtip',
+        scrollX: true, 
         columnDefs: [
             { orderable: false, targets: 0 },
-            { width: '120px', targets: '_all' }
         ],
+        language: {
+            "zeroRecords": "No records found matching your criteria."
+        },
         initComplete: function () {
             const api = this.api();
 
-        let activeFilters = $(api.table().node()).data("activeFilters") || {};
-        $(api.table().node()).data("activeFilters", activeFilters);  
-
-          const scrollHeads = $('.dt-scroll-head');
+            // Clean up duplicated headers from DataTables ScrollX feature
+            const scrollHeads = $('.dt-scroll-head');
             if (scrollHeads.length > 1) {
                 scrollHeads.eq(1).remove();
             }
 
-             api.columns().every(function () {
+            // 3. Re-apply Filter UI (Without Client-side Filter Logic)
+            api.columns().every(function () {
                 const column = this;
                 const header = $(column.header());
                 const columnKey = header.data('col');
 
-               // 🔹 Prevent duplicate filter buttons if reinitializing or redrawing
-               if (header.find('.filter-container').length) return;
-               
-                if (!columnKey) return;
-                let uniqueValues = [];
+                if (!columnKey || header.find('.filter-container').length) return;
 
-if (columnOptions.hasOwnProperty(columnKey)) {
-    uniqueValues = columnOptions[columnKey];
-} else {
-    uniqueValues = [];
-}
+                let uniqueValues = window.columnOptions[columnKey] || [];
+                
+                const filterContainer = $('<div class="filter-container"></div>');
+                const filterButton = $('<button class="filter-button transition-colors"><i class="fa fa-filter"></i></button>');
+                const optionsContainer = $('<div class="filter-options" data-column-key="' + columnKey + '" ></div>');
+                
+                // Search Input & Select All (Kept for UI usability)
+                const searchInput = $('<input type="text" class="filter-search" placeholder="Search..." ' + 'style="width:100%;padding:4px;margin-bottom:5px;border:1px solid #ccc;border-radius:4px;position:sticky;top:0;background:#fff;z-index:10;">');
+                optionsContainer.append(searchInput);
 
-                    const filterContainer = $('<div class="filter-container"></div>');
-                    const filterButton = $('<button class="filter-button transition-colors"><i class="fa fa-filter"></i></button>');
-                    const optionsContainer = $('<div class="filter-options" data-column-key="' + columnKey + '" ></div>');
+                const selectAllLabel = $('<label class="flex items-center text-sm text-gray-700 select-all-label">');
+                const selectAllCheckbox = $('<input type="checkbox" data-select-all="true">');
+                selectAllLabel.append(selectAllCheckbox).append('Select All');
+                optionsContainer.append(selectAllLabel);
+
+                uniqueValues.forEach(value => {
+                    const label = $('<label class="flex items-center text-sm text-gray-700">');
+                    const checkbox = $('<input type="checkbox" value="' + value + '">');
+                    label.append(checkbox).append(value);
+                    optionsContainer.append(label);
+                });
+
+                filterContainer.append(filterButton, optionsContainer);
+                header.append(filterContainer);
+
+                // Restore checked state based on window.currentFilters
+                const saved = window.currentFilters[columnKey] || [];
+                if (saved.length) {
+                    optionsContainer.find('input[type="checkbox"]:not([data-select-all])').each(function() {
+                        if (saved.includes($(this).val())) $(this).prop('checked', true);
+                    });
+                    const checkboxes = optionsContainer.find('input[type="checkbox"]:not([data-select-all])');
+                    const allChecked = checkboxes.length > 0 && checkboxes.length === checkboxes.filter(':checked').length;
+                    optionsContainer.find('input[data-select-all]').prop('checked', allChecked);
+                    filterButton.find('i').css('color', 'green'); // Indicate active filter
+                }
+                
+                // 4. Filter Button Click (UI Positioning)
+                filterButton.on('click', function(e) {
+                    e.stopPropagation();
+                    $("#loader").show();
+                    $('.filter-options').not(optionsContainer).removeClass('show');
                     
-const searchInput = $('<input type="text" class="filter-search" placeholder="Search..." ' + 'style="width:100%;padding:4px;margin-bottom:5px;border:1px solid #ccc;border-radius:4px;position:sticky;top:0;background:#fff;z-index:10;">');
-optionsContainer.append(searchInput);
-
-
-const selectAllLabel = $('<label class="flex items-center text-sm text-gray-700 select-all-label">');
-const selectAllCheckbox = $('<input type="checkbox" data-select-all="true">');
-selectAllLabel.append(selectAllCheckbox).append('Select All');
-optionsContainer.append(selectAllLabel);
-
-                    uniqueValues.forEach(value => {
-                        const label = $('<label class="flex items-center text-sm text-gray-700" for="column' + value + '">');
-                        const checkbox = $('<input type="checkbox" value="' + value + '" id="column' + value + '">');
-                        label.append(checkbox).append(value);
-                        optionsContainer.append(label);
+                    // Reposition dropdown to body to avoid clipping inside table scroll
+                    if (!optionsContainer.parent().is('body')) {
+                        optionsContainer.appendTo('body');
+                    }
+                    optionsContainer.toggleClass('show');
+                    const offset = filterButton.offset();
+                    optionsContainer.css({
+                        top: offset.top + filterButton.outerHeight() + 5,
+                        left: offset.left,
+                        position: 'absolute',
+                        zIndex: 10000
                     });
+                    setTimeout(function (){ $("#loader").hide(); }, 500); 
+                });
 
-                    filterContainer.append(filterButton, optionsContainer);
-                    header.append(filterContainer);
-
-                    activeFilters[columnKey] = [];
-
-                    filterButton.on('click', function(e) {
-                        e.stopPropagation();
-                        $("#loader").show();
-                            $('.filter-options').not(optionsContainer).removeClass('show');
-                              if (!optionsContainer.parent().is('body')) {
-                                optionsContainer.appendTo('body');
-                              }
-                            optionsContainer.toggleClass('show');
-                            const offset = filterButton.offset();
-                            optionsContainer.css({
-                               top: offset.top + filterButton.outerHeight() + 5,
-                               left: offset.left - 100,
-                               position: 'absolute',
-                               zIndex: 10000
-                           });
-                           setTimeout(function (){
-                               $("#loader").hide();
-                           },2000);
-                    });
-
-                optionsContainer.on('click', function(e){
-    e.stopPropagation(); // prevents closing
-});
-
+                optionsContainer.on('click', function(e){ e.stopPropagation(); });
+                
+                // Search input inside filter dropdown
                 searchInput.on('keyup', function () {
                     const searchVal = $(this).val().toLowerCase();
                     optionsContainer.find('label').not('.select-all-label').each(function () {
-                        const labelText = $(this).text().toLowerCase();
-                        $(this).toggle(labelText.indexOf(searchVal) > -1);
+                        $(this).toggle($(this).text().toLowerCase().indexOf(searchVal) > -1);
                     });
                 });
-
-                    optionsContainer.on('change', 'input[type="checkbox"]', function(e) {
-                        const isSelectAll = $(this).data('select-all');
-                        const checkboxes = optionsContainer.find('input[type="checkbox"]:not([data-select-all])');
-                        
-                        if (isSelectAll) {
-                            checkboxes.prop('checked', this.checked);
-                        } else {
-                            const allChecked = checkboxes.length === checkboxes.filter(':checked').length;
-                            optionsContainer.find('input[data-select-all="true"]').prop('checked', allChecked);
-                        }
-
-                        const selectedValues = checkboxes.filter(':checked').map(function() {
-                            return $(this).val();
-                        }).get();
-
-                     window.currentFilters[columnKey] = selectedValues;
-                    $('#loader').css("display", "block");
-                    window.searchType=2;
-                   $.ajax({
-                        url: 'content/jobposting.php',
-                        type: 'POST',
-                        data: {
-                            filters: JSON.stringify(window.currentFilters),
-                            li: window.currentPage,
-                            searchType: window.searchType
-                        },
-                        success: function (response) {
-                              $("#mistable").html(response);
-                        }
-                    });
-                    
-                    
-                    });
                 
+                // 5. Checkbox Change (Triggers Server-Side Filter Reload)
+                optionsContainer.on('change', 'input[type="checkbox"]', function(e) {
+                    const isSelectAll = $(this).data('select-all');
+                    const checkboxes = optionsContainer.find('input[type="checkbox"]:not([data-select-all])');
+                    
+                    if (isSelectAll) {
+                        checkboxes.prop('checked', this.checked);
+                    } else {
+                        const allChecked = checkboxes.length === checkboxes.filter(':checked').length;
+                        optionsContainer.find('input[data-select-all="true"]').prop('checked', allChecked);
+                    }
+
+                    const selectedValues = checkboxes.filter(':checked').map(function() { return $(this).val(); }).get();
+
+                    window.currentFilters[columnKey] = selectedValues;
+                    window.currentPage = 1; // Reset to page 1 on filter change
+                    
+                    if (selectedValues.length > 0) {
+                        filterButton.find('i').css('color', 'green');
+                    } else {
+                        filterButton.find('i').css('color', '');
+                    }
+                    
+                    loadTableData(1, 2, window.currentFilters); 
+                });
             });
         }
     });
-setTimeout(function (){
-   
-$("#loader").hide() 
-},1800);;   
+    $(document).off('error.dt'); // Remove previous handlers
+    $(document).on('error.dt', function (e, settings, techNote, message) {
+        if (techNote === 4 || techNote === 18) {
+            console.warn(`DataTables warning suppressed (TN${techNote}): No data or incorrect column count.`, message);
+            e.preventDefault(); // Stop the default alert
+        }
+    });
+    $("#loader").hide();
 }
-   
-$(document).ready(function () {
 
-initDataTable();
+function loadTableData(page, type, filters, search, column) {
+    $('#loader').css("display", "block");
+    
+    let postData = { 
+        li: page,
+        searchType: type,
+        filters: JSON.stringify(filters) // Always send current filters
+    };
+    
+    // If simple search is active, include search parameters
+    if (type === 1 || (type === 0 && window.searchType === 1)) {
+        postData.search = search || $("#search-text").val();
+        postData.column = column || selectedCol;
+        postData.realcolumn = $("#cc").text();
+        postData.filters = JSON.stringify({}); // Clear filters for simple search
+        window.currentFilters = {};
+    }
 
-$(document).on("click", ".pagination a.page-link", function(e){
-    e.preventDefault();
-    const href = $(this).data("page");
-    window.currentPage = href;
+    // Update global state
+    window.currentPage = page;
+    window.searchType = type;
 
-<?php if(!empty($filters)) {
-    echo "window.currentFilters = " . json_encode($filters, JSON_UNESCAPED_UNICODE) . ";";
-    echo "window.searchType = " .$searchType. ";";
-}?>
- 
-   $('#loader').css("display", "block");
     $.ajax({
         url: 'content/jobposting.php',
         type: 'POST',
-        data: {
-            filters: JSON.stringify(window.currentFilters),
-            li: window.currentPage,
-            searchType:window.searchType
-        },
+        data: postData,
         success: function(response) {
             $("#mistable").html(response);
+            initDataTable(); // Re-init table after loading new data
+            $('#loader').hide();
+            $('.filter-options').removeClass('show'); // Ensure dropdowns are closed
+        },
+        error: function() {
+            $('#loader').hide();
+            alert('Error loading data.');
         }
     });
-});
+}
 
-});
+// Global Document Ready Handlers
+$(document).ready(function () {
+    // Initial load and setup
+    initDataTable();
+    $(document).on("click", ".pagination a.page-link", function(e){
+        e.preventDefault();
+        const newPage = $(this).data("page");
+        
+        // Pass the context of the active search/filter mode
+        let currentSearchText = $("#search-text").val();
+        let currentSearchCol = selectedCol;
+        
+        // If search type is 0 (default), check if a filter/search was previously applied
+        let typeToUse = window.searchType || 0;
+        if(typeToUse === 1 && currentSearchText === '') {
+            // If simple search was active but text is now empty, treat as default (type 0)
+            typeToUse = 0;
+        } else if (typeToUse === 2 && Object.keys(window.currentFilters).length === 0) {
+            // If multi-filter was active but filters are now empty, treat as default (type 0)
+            typeToUse = 0;
+        }
+
+        loadTableData(newPage, typeToUse, window.currentFilters, currentSearchText, currentSearchCol);
+    });
+});   
 
 document.querySelectorAll('.dropdown-toggle').forEach(btn => {
     btn.addEventListener('click', function(e){

@@ -19,8 +19,8 @@ $m="Not found"; $icon="error";
 }else{
 
 $name=addslashes($_POST['name']);
-$mobile=$_POST['mobile'];
-$email=$_POST['email'];
+$mobile=trim($_POST['mobile']);
+$email=trim($_POST['email']);
 $refer=$_POST['refer']; 
 $indus=$_POST['industry']; 
 $gender=$_POST['gender'];
@@ -59,17 +59,42 @@ $dateTime=date('Y-m-d h:i:s');
 $token2=$_POST['token2'];
 
 $username=$data['username'];
+$jobid=$_POST['jid'];
 
 // generate password 
 $passkey=substr(uniqid(),1,6).substr(time(),3,7)."_meraqui";
 $password=md5($passkey);
 
 
-if($update){ 
+$mandatoryError = '';
+if($mobile=='' && $email==''){
+    $mandatoryError="Mobile and Email are required";
+}elseif($mobile==''){
+    $mandatoryError="Mobile is required";
+}elseif($email==''){
+    $mandatoryError="Email is required";
+}
+
+if($mandatoryError!=''){
+    $m=$mandatoryError;
+    $icon="error";
+}elseif($update){ 
 $aap=mysqli_query($host,"select status from applicant where id='$update'");
 $aps=mysqli_fetch_array($aap);
 
+$duplicateApplicant = ats_find_duplicate_applicant($host, $subdomain, $email, $mobile, $update);
+
 $idds=$update;
+if($duplicateApplicant){
+    if(!empty($duplicateApplicant['email_match']) && !empty($duplicateApplicant['mobile_match'])){
+        $m="Email and Mobile already exist";
+    }elseif(!empty($duplicateApplicant['email_match'])){
+        $m="Email already exists";
+    }else{
+        $m="Mobile already exists";
+    }
+    $icon="error";
+}else{
  $q="update applicant set jobtitle='$jobtitle',name='$name',cname='$cname', email='$email', mobile='$mobile', address='$address', refer='$refer', industry='$indus', subdomain='$subdomain',remark='$remark', gender='$gender', year='$year', status='$status', source='$source',skill='$skill', groups='$group', period='$period', reloaction='$reloaction',ctc='$ctc',ctc_type='$ctctype', ectc='$ectc',ectc_type='$ectctype',ltime='$dateTime',lang='$lang',tech='$tech' ,city='$city', state='$state' where id='$update' and subdomain='$subdomain'"; 
 
 if(mysqli_query($host,"$q")){
@@ -85,21 +110,41 @@ $m="Successfully Updated"; $icon="success";
 else{
 $m="Server Error"; $icon="error";
 }
+}
 
 
 }else{  
-$aap=mysqli_query($host,"select status from applicant where email='$email' and mobile='$mobile'");
-if(mysqli_num_rows($aap)==0){
+$duplicateApplicant = ats_find_duplicate_applicant($host, $subdomain, $email, $mobile);
+if(!$duplicateApplicant){
     $datee=date('Y-m-d h:i:s');
 $q="insert into applicant set jobtitle='$jobtitle', name='$name',cname='$cname', email='$email', mobile='$mobile', address='$address', refer='$refer', industry='$indus', subdomain='$subdomain',remark='$remark', gender='$gender', year='$year', status='$status', source='$source',skill='$skill', groups='$group', period='$period', reloaction='$reloaction', ctc='$ctc',ctc_type='$ctctype', ectc='$ectc',ectc_type='$ectctype', date='$datee',lang='$lang',tech='$tech' ,createname='$userbyname', createid='$username' ,city='$city', state='$state' , createtype='Manual Creation' , unit='FirstMile IT Services', ownershipid='$username', ownername='$userbyname' ";
  
 if(mysqli_query($host,"$q")){
-$ss=mysqli_query($host,"select id from applicant order by id desc limit 1");
+$ss=mysqli_query($host,"select id,name from applicant order by id desc limit 1");
 $dd=mysqli_fetch_array($ss);
 $idd=$dd[0];
+$sname=$dd[1];
 mysqli_query($host,"insert into upate set table_type='applicant',userby='$userbyname', username='$username',idd='$idd', type='$name profile is created by $userbyname through Manual Creation.', date='$date', time='$time', sub_domain='$subdomain'");
 
 mysqli_query($host,"insert into the shistory set idd='$idd', comment='$name has been created',date='$date', time='$time', userby='$userbyname', username='$username', sub_domain='$subdomain',table_type='applicant',status='$status', type='2'");
+
+if($jobid!=''){
+            // check job code
+            $js=mysqli_query($host,"select cid,job_code from job where id='$jobid'");
+            $js2=mysqli_fetch_array($js);
+            $jobcode=$js2[1];
+            $cid=$js2[0];
+            $qqne=''; $qqne2='';
+            $s = mysqli_query($host, "select id from submitjob where sid='$idd' and jobid='$jobid'");
+            if (mysqli_num_rows($s) == 0) {
+                $comment="$sname applicant to Assign Job of [ $jobcode ]";
+                $qqne= "('$cid','$idd','$jobid','$date','$time','$subdomain','$userbyname','$username','SUBMITTED TO ATS','$comment')";
+                mysqli_query($host, "insert into submitjob (clientid,sid,jobid,date,time,sub_domain,type,username,status,comment) values $qqne");
+                $qqne2="('$idd','$comment','$date','$time','$userbyname','$subdomain','applicant','$username','SUBMITTED TO ATS','$jobid')";
+                mysqli_query($host,"insert into shistory (idd,comment,date,time,userby,sub_domain,table_type,username,status,type) values $qqne2");
+            }
+
+}
 
 
 $m="Successfully Added"; $icon="success";
@@ -110,13 +155,17 @@ $m="Server Error"; $icon="error";
 
 }
 else{
-$m="Mobile Already exist";
+if(!empty($duplicateApplicant['email_match']) && !empty($duplicateApplicant['mobile_match'])){
+    $m="Email and Mobile already exist";
+}elseif(!empty($duplicateApplicant['email_match'])){
+    $m="Email already exists";
+}else{
+    $m="Mobile already exists";
+}
 $icon="error";
 }
 
 }
-
-
 }
 ?>
 

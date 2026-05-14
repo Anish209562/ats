@@ -9,8 +9,7 @@
 
         <!-- META DATA -->
 		<meta charset="UTF-8">
-		<base href="/Meraqui/cpanel/" />
-		
+	
         <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="Description" content="KAiZEN  KCC Card community System - Add Client">
@@ -21,48 +20,48 @@
 		<title> MERAQUI REPORTS </title>
 
         <!-- FAVICON -->
-        <link rel="icon" href="build/assets/images/brand-logos/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="../build/assets/images/brand-logos/favicon.ico" type="image/x-icon">
 
         <!-- BOOTSTRAP CSS -->
-	    <link  id="style" href="build/assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	    <link  id="style" href="../build/assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- ICONS CSS -->
-        <link href="build/assets/icon-fonts/icons.css" rel="stylesheet">
+        <link href="../build/assets/icon-fonts/icons.css" rel="stylesheet">
         
         <!-- APP SCSS -->
-        <link rel="preload" as="style" href="build/assets/app-fce3f544.css" /><link rel="stylesheet" href="build/assets/app-fce3f544.css" />
+        <link rel="preload" as="style" href="../build/assets/app-fce3f544.css" /><link rel="stylesheet" href="../build/assets/app-fce3f544.css" />
 
         <!-- NODE WAVES CSS -->
-        <link href="build/assets/libs/node-waves/waves.min.css" rel="stylesheet"> 
+        <link href="../build/assets/libs/node-waves/waves.min.css" rel="stylesheet"> 
 
         <!-- SIMPLEBAR CSS -->
-        <link rel="stylesheet" href="build/assets/libs/simplebar/simplebar.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/simplebar/simplebar.min.css">
 
         <!-- COLOR PICKER CSS -->
-        <link rel="stylesheet" href="build/assets/libs/flatpickr/flatpickr.min.css">
-        <link rel="stylesheet" href="build/assets/libs/%40simonwep/pickr/themes/nano.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/flatpickr/flatpickr.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/%40simonwep/pickr/themes/nano.min.css">
 
         <!-- CHOICES CSS -->
-        <link rel="stylesheet" href="build/assets/libs/choices.js/public/assets/styles/choices.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/choices.js/public/assets/styles/choices.min.css">
 
         <!-- CHOICES JS -->
-        <script src="build/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+        <script src="../build/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
 
         <!-- MAIN JS -->
-        <script src="build/assets/main.js"></script>
+        <script src="../build/assets/main.js"></script>
 
          
         <!-- QUILL CSS -->
-        <link rel="stylesheet" href="build/assets/libs/quill/quill.snow.css">
-        <link rel="stylesheet" href="build/assets/libs/quill/quill.bubble.css">
+        <link rel="stylesheet" href="../build/assets/libs/quill/quill.snow.css">
+        <link rel="stylesheet" href="../build/assets/libs/quill/quill.bubble.css">
 
         <!-- FILEPOND CSS -->
-        <link rel="stylesheet" href="build/assets/libs/filepond/filepond.min.css">
-        <link rel="stylesheet" href="build/assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css">
-        <link rel="stylesheet" href="build/assets/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/filepond/filepond.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.css">
 
         <!-- DATE & TIME PICKER CSS -->
-        <link rel="stylesheet" href="build/assets/libs/flatpickr/flatpickr.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/flatpickr/flatpickr.min.css">
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css">
          <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.0/css/dataTables.bootstrap5.css">
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.js"></script> 
@@ -318,7 +317,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
    <span id="output"></span>
         
         <div id="loader">
-			<img src="build/assets/images/media/loader.svg" alt="">
+			<img src="../build/assets/images/media/loader.svg" alt="">
 		</div>
 	
           <div class="page" style="justify-content: start !important;">
@@ -348,7 +347,7 @@ include("header.php");
             </thead>
             <tbody>
                  <?php 
-         $s1=mysqli_query($host,"select * from job where subdomain='$subdomain' and date between '$start_date' and '$end_date' order by id desc");  
+         $s1=mysqli_query($host,"select * from job where subdomain='$subdomain' and date(start_job) between '$start_date' and '$end_date' order by id desc");  
          while ($d1 = mysqli_fetch_array($s1)) { ?>
                 <tr>
                     <td><?php echo $d1['client'];?></td>
@@ -381,7 +380,7 @@ include("header.php");
             </thead>
             <tbody>
                  <?php 
-       $s1=mysqli_query($host,"select client,count(case when status='Active' then 1 else 0 end) as totalActivejob from job where subdomain='$subdomain' and date between '$start_date' and '$end_date' group by cid order by id desc");  
+       $s1=mysqli_query($host,"select client,count(case when status='Active' then 1 else 0 end) as totalActivejob from job where subdomain='$subdomain' and date(start_job) between '$start_date' and '$end_date' group by cid order by id desc");  
  
     while ($d1 = mysqli_fetch_array($s1)) {?>
                 <tr>
@@ -425,7 +424,7 @@ include("header.php");
     </thead>
     <tbody>
         <?php 
-        $sql = "SELECT * FROM job WHERE subdomain='$subdomain' and date between '$start_date' and '$end_date' ORDER BY client asc";
+        $sql = "SELECT * FROM job WHERE subdomain='$subdomain' and date(start_job) between '$start_date' and '$end_date' ORDER BY client asc";
         $s1 = mysqli_query($host, $sql);
 
         $currentClient = "";
@@ -485,6 +484,124 @@ $tooltipText = '["' . implode('","', $states) . '"]';
 </table>
          <?php
        }
+       
+              else if($_GET['type']=='33'){
+?>
+<table class="table report-table example display">
+    <thead>
+        <tr>
+            <th>Job Status</th>
+            <th>Job Code</th>
+            <th>Job Title</th>
+            <th>Client</th>
+            <th>Client Bill Rate</th>
+            <th>Pay rate</th>
+            <th>State</th>
+            <th>Client Manager</th>
+            <th>Account Manager</th>
+            <th>Number of Positions</th>
+            <th>Recruitment Manager</th>
+            <th>Job Created</th>
+            <th>#Of Submissions</th>
+            <th>#Of Client Sub</th>
+            <th>#Of Interviews</th>
+            <th>#Of Confirmations</th>
+            <th>Job #1</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <?php 
+        
+        // -------------------------
+        // 1️⃣  First: Count per Status
+        // -------------------------
+
+        $countQuery = "
+            SELECT status, COUNT(*) AS total 
+            FROM job 
+            WHERE subdomain='$subdomain'
+            AND date(start_job) BETWEEN '$start_date' AND '$end_date'
+            GROUP BY status
+        ";
+
+        $countResult = mysqli_query($host, $countQuery);
+        $statusTotal = [];
+
+        while($r = mysqli_fetch_assoc($countResult)) {
+            $statusTotal[$r['status']] = $r['total'];
+        }
+
+        // -------------------------
+        // 2️⃣  Now fetch actual rows
+        // -------------------------
+
+        $sql = "
+            SELECT * FROM job 
+            WHERE subdomain='$subdomain'  
+            AND date(start_job) BETWEEN '$start_date' AND '$end_date'
+            ORDER BY status ASC, client ASC
+        ";
+
+        $s1 = mysqli_query($host, $sql);
+
+        $currentStatus = "";
+
+        while ($d1 = mysqli_fetch_array($s1)) {
+
+            // STATES
+            $states = explode(",", $d1['state']);
+            $displayStates = implode(", ", array_slice($states, 0, 3));
+            $tooltipText = '["' . implode('","', $states) . '"]';
+
+            // -------------------------
+            // 3️⃣  New Status Heading
+            // -------------------------
+            if ($currentStatus != $d1['status']) {
+
+                $currentStatus = $d1['status'];
+                $total = $statusTotal[$currentStatus] ?? 0;
+
+                echo "<tr class='group-row' style='background:#cfe2ff;font-weight:bold;'>
+                        <td colspan='16'>{$currentStatus} (Total: $total)</td>
+                      </tr>";
+            }
+
+            // -------------------------
+            // 4️⃣  Job row
+            // -------------------------
+            echo "<tr>
+                <td></td>
+                <td><a href='job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_code']}</a></td>
+                <td><a href='job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_title']}</a></td>
+                <td>{$d1['client']}</td>
+                
+                <td>{$d1['bill_type']}/{$d1['rate']}/{$d1['bill_time']}</td>
+                <td>0</td>
+
+                <td data-bs-toggle='tooltip' data-bs-placement='top' title='$tooltipText'>
+                    $displayStates
+                </td>
+
+                <td>{$d1['c_manager']}</td> <td>{$d1['account']}</td>
+                <td>{$d1['position']}</td>
+                <td>{$d1['recrutment']}</td>
+                <td>{$d1['date']}</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>";
+        }
+        ?>
+    </tbody>
+</table>
+
+<?php
+}
+
+       
         else if($_GET['type']=='4'){
 
 $customRes = mysqli_query($host, "SELECT * FROM custom WHERE username='$username' AND type='job' and report_type='1' LIMIT 1");
@@ -511,7 +628,7 @@ if ($hasCustom) {
     }
 
 } else {
-    $showColumn = ['id','job_code','job_title','start_job','priority','assigned','status','client','date','ltime', 'createname']; // <-- your choices
+    $showColumn = ['id','job_code','job_title','start_job','priority','assigned','status','position','client','c_manager','date','ltime', 'createname']; // <-- your choices
 
     $sql = "SHOW FULL COLUMNS FROM `job`";
     $res = mysqli_query($host, $sql);
@@ -536,7 +653,7 @@ if ($hasCustom) {
     if ($realCol === 'id') continue; // skip 'id' column
 ?>
     <th data-col="<?= htmlspecialchars($realCol) ?>">
-        <?= htmlspecialchars($colHead) ?>
+        <?php echo $realCol!="position" ? htmlspecialchars($colHead) : "No. of Position"; ?>
     </th>
 <?php } ?>
         </tr>
@@ -544,7 +661,7 @@ if ($hasCustom) {
     <tbody>
 
 <?php 
-$s1=mysqli_query($host,"select $tcolList from job where subdomain='$subdomain' and date between '$start_date' and '$end_date' $gg $ord");  
+$s1=mysqli_query($host,"select $tcolList from job where subdomain='$subdomain' and date(start_job) between '$start_date' and '$end_date' $gg $ord");  
 
 while ($d1 = mysqli_fetch_array($s1)) {
             
@@ -615,7 +732,7 @@ $tooltipText = '["' . implode('","', $states) . '"]';
             </thead>
             <tbody>
       <?php 
-       $s1=mysqli_query($host,"select status,count(status) as total from job where subdomain='$subdomain' and date between '$start_date' and '$end_date' group by status order by id desc");  
+       $s1=mysqli_query($host,"select status,count(status) as total from job where subdomain='$subdomain' and date(start_job) between '$start_date' and '$end_date' group by status order by id desc");  
        while ($d1 = mysqli_fetch_array($s1)) {?>
                 <tr>
                     <td><?php echo $d1['status'];?></td>
@@ -657,11 +774,11 @@ $tooltipText = '["' . implode('","', $states) . '"]';
         <div id="responsive-overlay"></div>
  
         <!-- DATE & TIME PICKER JS -->
-        <script src="build/assets/libs/flatpickr/flatpickr.min.js"></script>
+        <script src="../build/assets/libs/flatpickr/flatpickr.min.js"></script>
 
         <!-- BOOTSTRAP JS -->
-        <script src="build/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-   <script src="build/assets/libs/apexcharts/apexcharts.min.js"></script>
+        <script src="../build/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+   <script src="../build/assets/libs/apexcharts/apexcharts.min.js"></script>
 
         <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
         

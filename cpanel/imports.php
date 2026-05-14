@@ -136,7 +136,7 @@ i.fa{
          <h5 class="mb-0">Import <?php echo strtoupper($text);?> from spreadsheet</h5>
          <div>
          <i class="fa fa-long-arrow-left" onclick="history.back();" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Go Back"></i>
-         <i class="fa fa-download"  onclick="window.location='content/<?php echo $text;?>.xls'" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Template Download"></i>
+         <i class="fa fa-download"  onclick="window.location='content/<?php echo $text;?>.xlsx'" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Template Download"></i>
          </div>
     </div>
 

@@ -324,6 +324,7 @@ i.bi{
               </div>
               <div class="col">
                 <h5><?php echo $ds['job_code'];?> - <?php echo $ds['job_title'];?></h5>
+                 <button class="btn btn-primary" style="float:right;"><a href="applicant.php?jid=<?php echo $ds['id'];?>" class="text-white">Add Applicant</a></button>
                 <h6 class="text-muted"><a href="client_view.php?sid=<?php echo $ds['cid'];?>"> <i class="fa fa-pulse"></i> <?php echo $ds['client'];?></a> | <i class="fa fa-map-marker"></i>
                 <?php $add = explode(";", $ds['address']); ?>
 <span class="text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" title='<?php echo htmlspecialchars(json_encode($add), ENT_QUOTES, 'UTF-8'); ?>'>

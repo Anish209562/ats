@@ -279,8 +279,11 @@ table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
                 <h1 class="text-center mb-4 mt-4">Add Applicant</h1>
                 
                 
-                 <div class="grid-container">
-                    <div class="grid-item" onclick="window.open('resume_upload.php','_blank');">
+                <div class="grid-container">
+                     <?php
+                     $ff= isset($_GET['jid']) && $_GET['jid']!=0 ? "?jid=".$_GET['jid'] : '';
+                     ?>
+                    <div class="grid-item" onclick="window.open('resume_upload.php<?php echo $ff;?>','_blank');">
                         <span class="icon">&#x2601;&#xFE0E;</span>
                         <span class="text">Parse Resume</span>
                     </div>
@@ -460,7 +463,7 @@ function callJobs(el, id) {
     $last= $startPage= isset($_GET['li']) ? (int)$_GET['li'] : 1;
     $off=($last - 1)*$limit;
     
-    $query="select $tcolList from applicant where subdomain='$subdomain' $tt order by id asc limit $off,$limit ";
+    $query="select $tcolList from applicant where subdomain='$subdomain' $tt order by id desc limit $off,$limit ";
 //   if(strtolower($_SESSION['typess'])=='admin'){
 //       echo $query;
 //   }
@@ -873,6 +876,7 @@ $(document).on("change", "#bulk", function () {
             var formData = new FormData();
             formData.append('bulk', fileInput.files[0]); // the file
             formData.append('source', $('#source').val()); // the hidden source value
+            <?php if(isset($_GET['jid']) && $_GET['jid']){?> formData.append("jobid","<?php echo $_GET['jid'];?>"); <?php } ?>
 
             $('#loader').css("display","block");
             $.ajax({

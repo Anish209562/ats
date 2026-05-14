@@ -1,7 +1,8 @@
 <?php include '../db.php';  
 
    $x=$_POST['x'];    
-   
+   $jid=isset($_POST['jid']) ? $_POST['jid'] : '';
+
    ?>
  <style>
     .form-check{
@@ -353,6 +354,7 @@
                </div>
                 <input type="hidden" value="<?php echo $ss1['id']; ?>" id='updates' name="updates"/>
                 <input type="hidden" value="1" id='cid' name="cid"/>
+                <input type="hidden" value="<?php echo $jid;?>" id='jid' name="jid"/>
                 <input type="hidden" value="<?php echo time().uniqid();?>" id="token2" name="token2"/>
                 <input type="reset" id="resetbtn" style="display: none;" />
             <!-- submit button -->

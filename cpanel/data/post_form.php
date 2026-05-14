@@ -84,13 +84,17 @@ if($x==0 and $x==''){
    $jjj=mysqli_fetch_array($dd1);
    $job=$jjj[0];
    
-   if (preg_match('/JPC-(\d+)/', $job, $matches)) {
-    $number = (int)$matches[1]; 
-    $nextNumber = $number + 1; 
-    $newJobCode = 'JPC-' . $nextNumber; }
-   else {
-    $newJobCode = 'JPC-2499'; // fallback if no match
+if (preg_match('/JPC\s-\s(\d+)/', $job, $matches)) {
+    $number = (int)$matches[1];
+    $nextNumber = $number + 1;
+
+    // keep same space pattern: JPC - XXXX
+    $newJobCode = 'JPC - ' . $nextNumber;
+} else {
+    // fallback with spaces
+    $newJobCode = 'JPC - 2499';
 }
+
 }
    ?>
 
@@ -102,19 +106,19 @@ if($x==0 and $x==''){
          <button type="button" id="closeid" class="btn-close" style="font-size:18px !important;" data-bs-dismiss="modal" aria-label="Close" onclick="$('#output1').html('');">
          </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="padding-left:0px;padding-right:0px;overflow-x:hidden;position:relative;">
          <form method="post" id="postform1" enctype="multipart/form-data" style="margin-top: 15px;">
-            <div class="row gy-3">
+            <div class="row gy-3" style="padding-left:20px;padding-right:20px;">
                 <div class="col-xl-12">
                     <h5>Job Details</h5>
                 </div>
                 <div class="col-xl-4"> 
                    <label for="code" class="form-label">Job Code<span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="code" name="code" readonly=""value="<?php echo $newJobCode;?>" required=""/>
+                  <input type="text" class="form-control" id="code" name="code" readonly=""value="<?php echo $newJobCode;?>" required/>
                </div>
                <div class="col-xl-4"> 
                    <label for="title" class="form-label">Job Title<span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="title" name="title" placeholder="Enter Job Title" value="<?php echo $ss1['job_title'];  ?>" required=""/>
+                  <input type="text" class="form-control" id="title" name="title" placeholder="Enter Job Title" value="<?php echo $ss1['job_title'];  ?>" required/>
                </div>
                
                 <div class="col-xl-4">
@@ -195,8 +199,8 @@ if($x==0 and $x==''){
               <div class="row">
                    
                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                  <label for="start_job" class="form-label">Job Start Date</label>
-                  <input type="date" class="form-control" id="start_job" name="start_job" value="<?php echo $ss1['start_job'];  ?>">
+                  <label for="start_job" class="form-label">Job Start Date<span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="start_job" name="start_job" value="<?php echo $ss1['start_job'];  ?>" required=""/>
                </div>
               
                <div class="col-lg-5 col-xl-5 col-md-5">
@@ -374,7 +378,7 @@ if($x==0 and $x==''){
                
                  <div class="col-xl-4">
                   <label for="c_manager" class="form-label">Client Manager<span class="text-danger">*</span></label>
-                  <select class="form-control" id="c_manager" name="c_manager" placeholder="Client Manager">
+                  <select class="form-control" id="c_manager" name="c_manager" placeholder="Client Manager" required>
                       <option value="" hidden="">Select Manager</option>
                       <?php
  if($x){
@@ -538,7 +542,7 @@ echo $rowshtml;
           
                </div>
               
-            <div class="row" style="margin-top: 20px;">
+            <div class="row" style="margin-top: 20px;padding-left:20px;padding-right:20px;">
                 <div class="col-xl-12">
                     <h5>Skills</h5>
                 </div>
@@ -671,7 +675,7 @@ echo $rowshtml;
 
               
               
-            <div class="row" style="margin-top: 20px;padding-bottom:50px;">
+            <div class="row" style="margin-top: 20px;padding-bottom:50px;padding-left:20px;padding-right:20px;">
                 <div class="col-xl-12">
                     <h5>Job Post Configuration</h5>
                 </div>
@@ -783,7 +787,7 @@ echo $rowshtml;
              
              <div class="col-xl-6 col-lg-6 col-md-6" id="jobdiv">
                   <label for="job_desc" class="form-label">Job Description<span class="text-danger">*</span></label>
-                  <textarea class="form-control" id="job_desc" name="job_desc" required="" placeholder="Enter Job Description"><?php echo $ss1['job_desc'];  ?></textarea>
+                  <textarea class="form-control" id="job_desc" name="job_desc"  placeholder="Enter Job Description"><?php echo $ss1['job_desc'];  ?></textarea>
                </div>
               
               
@@ -793,13 +797,15 @@ echo $rowshtml;
                 <input type="hidden" value="" id="limit_main" name="limit_main"/>
                 <input type="hidden" value="<?php echo time().uniqid();?>" id="token2" name="token2"/>
                 <input type="reset" id="resetbtn" style="display: none;" />
+            
+             <div class="modal-footer" style="background:white;box-shadow: 0px -4px 12px darkgrey;position: fixed;bottom: 0;width:99%;z-index:9999 !important;">
+                <button type="submit" class="btn btn-primary" id="submit">Save Changes</button>
+              </div>
             <!-- submit button -->
          </form>
  
     </div>
-              <div class="modal-footer" style="box-shadow: 0px -4px 12px darkgrey;">
-                <button type="button" class="btn btn-primary" id="submit">Save Changes</button>
-              </div>
+             
 
       </div>
    </div>
@@ -984,8 +990,9 @@ $("#response").on("change",function (){
       });
  });
 
-$("#submit").on('click',(function(){
-    
+
+$("#postform1").on("submit",function (e){
+    e.preventDefault();
     if (gameEditor2) $('#remark').val(gameEditor2.getData());
      if (gameEditor3) $('#job_desc').val(gameEditor3.getData());
               $('#loader').css("display","block");
@@ -1002,7 +1009,9 @@ $("#submit").on('click',(function(){
                             $('#loader').hide();
                         }
                     });
-          }));  
+});
+
+
   $('.dropdown-menu').on('click', function (e) {
     e.stopPropagation();
   });

@@ -351,7 +351,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
     <li><a href="#" class="dropdown-item">Graph Report</a></li>
   </ul>
 </div>
-                            <span class="count-badge">5</span>
+                            <span class="count-badge">6</span>
                         </li>
                         <li class="sidebar-item" data-tab-id="applicants">
                             <span>Applicants</span>
@@ -416,6 +416,11 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
                             <tr>
                                 <td><a href="reports/jobposting.php?type=4" target="_blank" class="text-primary text-decoration-none">Active Job - All</a></td>
                                 <td>Active Job</td>
+                                <td>Job Postings</td>
+                            </tr>
+                             <tr>
+                                <td><a href="reports/jobposting.php?type=33" target="_blank" class="text-primary text-decoration-none">Active Job With All Status</a></td>
+                                <td>Active Job - All Status</td>
                                 <td>Job Postings</td>
                             </tr>
                             <tr>

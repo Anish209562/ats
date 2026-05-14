@@ -6,6 +6,7 @@ if (isset($_POST['columns'])) {
     $email=$_POST['email'];
     $groups=$_POST['gg'];
     $orders=$_POST['ord'];
+    $sort=$_POST['sort'];
     $userby = $_SESSION['username'];
     $selectedColumns = $_POST['columns'];
 
@@ -26,6 +27,10 @@ if($_POST['type']!='' && isset($_POST['type'])){
 
     $allColumns   = [];
     $allComments  = [];
+    
+    $sort = strtoupper($sort) == "DESC" ? "DESC" : "ASC";
+    $groupsby= $groups!='' ? "GROUP BY ".$tt.".".$groups : '';
+    $orderBy= $orders!='' ? "order BY ".$tt.".".$orders." ".$sort : '';
 
     $sql = "SHOW FULL COLUMNS FROM `$tt`";
     $res = mysqli_query($host, $sql);
@@ -57,11 +62,11 @@ if($_POST['type']!='' && isset($_POST['type'])){
     $sss=mysqli_query($host,"select id from custom where subdomain='meraqui' and username='$userby' and type='$tt' and report_type='$check' ");
     if(mysqli_num_rows($sss)=="1"){
         $message="Successfully Updated";
-        $query = "update custom set email='$email',ltime='$datetime', rr='$rr', ddee='$ddee', tcolumn='$tcolumnStr', col='$colStr', comment='$commentStr' , groups='$groups', orders='$orders' where subdomain='meraqui' and username='$userby' and type='$tt' and report_type='$check'";
+        $query = "update custom set email='$email',ltime='$datetime', rr='$rr', ddee='$ddee', tcolumn='$tcolumnStr', col='$colStr', comment='$commentStr' , groups='$groupsby', orders='$orderBy' where subdomain='meraqui' and username='$userby' and type='$tt' and report_type='$check'";
     }
     else{
         $message="Successfully Created";
-        $query = "INSERT INTO custom set ltime='$datetime', subdomain='meraqui', username='$userby', userbyname='$userbyname' , type='$tt', tcolumn='$tcolumnStr', col='$colStr', comment='$commentStr', report_type='$check', email='$email', groups='$groups', orders='$orders' , rr='$rr', ddee='$ddee'";
+        $query = "INSERT INTO custom set ltime='$datetime', subdomain='meraqui', username='$userby', userbyname='$userbyname' , type='$tt', tcolumn='$tcolumnStr', col='$colStr', comment='$commentStr', report_type='$check', email='$email', groups='$groupsby', orders='$orderBy' , rr='$rr', ddee='$ddee'";
     }
     if(mysqli_query($host, $query)){
         $stats="success";

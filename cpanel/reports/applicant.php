@@ -9,7 +9,6 @@
 
         <!-- META DATA -->
 		<meta charset="UTF-8">
-		<base href="/Meraqui/cpanel/" />
 		
         <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,55 +20,55 @@
 		<title> Applicant REPORTS </title>
 
         <!-- FAVICON -->
-        <link rel="icon" href="build/assets/images/brand-logos/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="../build/assets/images/brand-logos/favicon.ico" type="image/x-icon">
 
         <!-- BOOTSTRAP CSS -->
-	    <link  id="style" href="build/assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	    <link  id="style" href="../build/assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- ICONS CSS -->
-        <link href="build/assets/icon-fonts/icons.css" rel="stylesheet">
+        <link href="../build/assets/icon-fonts/icons.css" rel="stylesheet">
         
         <!-- APP SCSS -->
-        <link rel="preload" as="style" href="build/assets/app-fce3f544.css" /><link rel="stylesheet" href="build/assets/app-fce3f544.css" />
+        <link rel="preload" as="style" href="../build/assets/app-fce3f544.css" /><link rel="stylesheet" href="../build/assets/app-fce3f544.css" />
 
         <!-- NODE WAVES CSS -->
-        <link href="build/assets/libs/node-waves/waves.min.css" rel="stylesheet"> 
+        <link href="../build/assets/libs/node-waves/waves.min.css" rel="stylesheet"> 
 
         <!-- SIMPLEBAR CSS -->
-        <link rel="stylesheet" href="build/assets/libs/simplebar/simplebar.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/simplebar/simplebar.min.css">
 
         <!-- COLOR PICKER CSS -->
-        <link rel="stylesheet" href="build/assets/libs/flatpickr/flatpickr.min.css">
-        <link rel="stylesheet" href="build/assets/libs/%40simonwep/pickr/themes/nano.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/flatpickr/flatpickr.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/%40simonwep/pickr/themes/nano.min.css">
 
         <!-- CHOICES CSS -->
-        <link rel="stylesheet" href="build/assets/libs/choices.js/public/assets/styles/choices.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/choices.js/public/assets/styles/choices.min.css">
 
         <!-- CHOICES JS -->
-        <script src="build/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+        <script src="../build/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
 
         <!-- MAIN JS -->
-        <script src="build/assets/main.js"></script>
+        <script src="../build/assets/main.js"></script>
 
          
         <!-- QUILL CSS -->
-        <link rel="stylesheet" href="build/assets/libs/quill/quill.snow.css">
-        <link rel="stylesheet" href="build/assets/libs/quill/quill.bubble.css">
+        <link rel="stylesheet" href="../build/assets/libs/quill/quill.snow.css">
+        <link rel="stylesheet" href="../build/assets/libs/quill/quill.bubble.css">
 
         <!-- FILEPOND CSS -->
-        <link rel="stylesheet" href="build/assets/libs/filepond/filepond.min.css">
-        <link rel="stylesheet" href="build/assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css">
-        <link rel="stylesheet" href="build/assets/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/filepond/filepond.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.css">
 
         <!-- DATE & TIME PICKER CSS -->
-        <link rel="stylesheet" href="build/assets/libs/flatpickr/flatpickr.min.css">
+        <link rel="stylesheet" href="../build/assets/libs/flatpickr/flatpickr.min.css">
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css">
          <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.0/css/dataTables.bootstrap5.css">
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.js"></script> 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css">
 
 
 <style>
@@ -318,7 +317,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
    <span id="output"></span>
         
         <div id="loader">
-			<img src="build/assets/images/media/loader.svg" alt="">
+			<img src="../build/assets/images/media/loader.svg" alt="">
 		</div>
 	
           <div class="page" style="justify-content: start !important;">
@@ -343,7 +342,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
             </thead>
             <tbody>
       <?php 
-       $s1=mysqli_query($host,"select name from applicant where subdomain='$subdomain' and date between '$start_date' and '$end_date' group by name");  
+       $s1=mysqli_query($host,"select name from applicant where subdomain='$subdomain' and date(date) between '$start_date' and '$end_date' group by name");  
        while ($d1 = mysqli_fetch_array($s1)) {?>
                 <tr>
                     <td><?php echo $d1['name'];?></td>
@@ -367,7 +366,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
             </thead>
             <tbody>
                  <?php 
-       $s1=mysqli_query($host,"select createname,count(createid) as total from applicant where subdomain='$subdomain' and date between '$start_date' and '$end_date' group by createid order by createname asc");  
+       $s1=mysqli_query($host,"select createname,count(createid) as total from applicant where subdomain='$subdomain' and date(date) between '$start_date' and '$end_date' group by createid order by createname asc");  
  
     while ($d1 = mysqli_fetch_array($s1)) {?>
                 <tr>
@@ -391,7 +390,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
             </thead>
             <tbody>
                  <?php 
-       $s1=mysqli_query($host,"select createtype,count(createtype) as total from applicant where subdomain='$subdomain' and date between '$start_date' and '$end_date' group by createtype order by createtype asc");  
+       $s1=mysqli_query($host,"select createtype,count(createtype) as total from applicant where subdomain='$subdomain' and date(date) between '$start_date' and '$end_date' group by createtype order by createtype asc");  
  
     while ($d1 = mysqli_fetch_array($s1)) {?>
                 <tr>
@@ -416,7 +415,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
             <tbody>
                  <?php 
       
-       $s1=mysqli_query($host,"SELECT status,COUNT(status) AS total FROM applicant where status in ('INTERNAL SCREEN REJECT','FIRSTMILE PANEL REJECT','ASSIGNED TO PRESELECTION TEAM','SUBMITTED TO CLIENT','DROP','HOLD BY CLIENT') and subdomain='$subdomain' and date between '$start_date' and '$end_date' GROUP BY status ORDER BY status ASC;");  
+       $s1=mysqli_query($host,"SELECT status,COUNT(status) AS total FROM applicant where status in ('INTERNAL SCREEN REJECT','FIRSTMILE PANEL REJECT','ASSIGNED TO PRESELECTION TEAM','SUBMITTED TO CLIENT','DROP','HOLD BY CLIENT') and subdomain='$subdomain' and date(date) between '$start_date' and '$end_date' GROUP BY status ORDER BY status ASC;");  
       while ($d1 = mysqli_fetch_array($s1)) {?>
                 <tr>
                     <td><?php echo $d1['status'];?></td>
@@ -429,68 +428,171 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
          <?php
        }
        else if($_GET['type']=='3'){
-         ?>
-<table class="table report-table example display">
-    <thead>
-        <tr>
-                 <th data-key="applicant">Applicant Id</th>
-                  <th data-key="name">Name</th>
-                  <th data-key="mobile">Mobile </th> 
-                  <th data-key="email">Email</th>
-                  <th>Gender</th>
-                  <th data-key="status">Status</th>
-                  <th>Job Title</th>
-                  <th data-key="source">Source</th>
-                  <th data-key="address">Address</th>
-                  <th>Experience</th>
-                  <th data-key="refer">Reference By</th>
-                  <th data-key="created">Created On</th>
-                  <th data-key="createdby">Created By</th>
-        </tr>
-    </thead>
-            <tbody>
-    <?php 
-    $s1=mysqli_query($host,"select * from applicant where subdomain='$subdomain' and date between '$start_date' and '$end_date' order by id asc");  
-   $r=mysqli_num_rows($s1); 
-    while ($d1 = mysqli_fetch_array($s1)) { 
-        $jobtitle="";
-        $sid=$d1['id'];
-        $cc=mysqli_query($host,"select jobid from submitjob where sid='$sid' order by id asc limit 1");
-        if(mysqli_num_rows($cc)==1){
-        $ccs=mysqli_fetch_array($cc);
-        $jobid=$ccs[0];
-        $jj=mysqli_query($host,"select job_title from job where id='$jobid'");
-        $jc=mysqli_fetch_array($jj);
-        $jobtitle=$jc[0];
-        }
-    ?>
-        <tr id="app-row-<?php echo $d1['id']; ?>">
-            <td><a href="app_view.php?sid=<?php echo $d1['id'];?>" target="_blank"><?php echo $d1['id']; ?> </a>
-           </td> 
-           
-            <td> <a href="app_view.php?sid=<?php echo $d1['id'];?>" target="_blank"><?php echo $d1['name']; ?>
-            
-            </a>
-            </td>
-           
-            <td><?php echo $d1['mobile']; ?></td> 
-            <td><?php echo $d1['email']; ?></td>
-            <td><?php echo $d1['gender']; ?></td>
-            <td><?php echo $d1['status']; ?>
-            </td>
-            <td><?php echo $jobtitle;?></td>
-            <td><?php if($d1['source']!='' or $d1['source']!=null){echo $d1['source'];}else{echo 'N/A';} ?></td> 
-            <td><?php if($d1['address']!='' or $d1['address']!=null){echo $d1['address'];}else{echo 'N/A';} ?></td>
-            <td><?php echo $d1['year']." Years "; ?></td>
-            
-            <td><?php if($d1['refer']!='' or $d1['refer']!=null){echo $d1['refer'];}else{echo 'N/A';} ?></td>
-            <td><?php echo date('d M, Y',strtotime($d1['date']))." ".date('H:i:s A',strtotime($d1['time'])); ?></td>
-            
-            <td><?php echo $d1['createname'];?></td>
-        </tr>
+$username = $_SESSION['username'];
 
-<?php } ?>
-</tbody>
+$customRes = mysqli_query($host,
+    "SELECT * FROM custom 
+     WHERE username='$username' 
+       AND type='applicant' 
+       AND report_type='1'
+     LIMIT 1"
+);
+
+$realColumns = [];
+$commentColumns = [];
+$columnOrder = [];
+
+if (mysqli_num_rows($customRes) > 0) {
+
+    $customRow = mysqli_fetch_assoc($customRes);
+
+    $groups = $customRow['groups'];
+    $order  = $customRow['orders'];
+
+    $realColumns    = array_map('trim', explode(",", $customRow['col']));
+    $commentColumns = array_map('trim', explode(",", $customRow['comment']));
+    $columnOrder    = array_map('trim', explode(",", $customRow['tcolumn']));
+
+} else {
+
+    $groups = "";  
+    $order  = "ORDER BY applicant.id DESC";
+
+    $realColumns = ['id','name','mobile','email','status','source','date','ltime','createname'];
+
+    // Fetch labels
+    $cm = [];
+    $res = mysqli_query($host,"SHOW FULL COLUMNS FROM applicant");
+    while ($c = mysqli_fetch_assoc($res)) {
+        $cm[$c['Field']] = $c['Comment'];
+    }
+
+    foreach ($realColumns as $c) {
+        $commentColumns[] = $cm[$c] ?: ucfirst($c);
+        $columnOrder[]    = $c;
+    }
+}
+$appQ = mysqli_query($host,
+    "SELECT * FROM applicant
+     WHERE subdomain='$subdomain'
+       AND DATE(date) BETWEEN '$start_date' AND '$end_date'
+     $groups
+     $order"
+);
+
+?>
+<table class="table report-table example display">
+  <?php
+echo "<thead><tr>";
+
+$colCounter = 0;
+
+foreach ($commentColumns as $i => $head) {
+
+    $colCounter++;
+
+    // print dynamic heading
+    echo "<th>" . htmlspecialchars($head) . "</th>";
+
+    // After 6 headings → insert job columns
+    if ($colCounter == 6) {
+        echo "<th>Job Title</th>";
+         echo "<th>Job Code</th>";
+        echo "<th>Client Name</th>";
+    }
+}
+
+echo "</tr></thead>";
+
+echo "<tbody>";
+
+while ($d1 = mysqli_fetch_assoc($appQ)) {
+
+    // fetch job for this applicant
+    $sid = $d1['id'];
+
+    $jobTitle = "N/A";
+    $jobClient = "N/A";$jobstatus="N/A";
+
+    $sj = mysqli_query($host,"SELECT jobid,status as jobstatus FROM submitjob WHERE sid='$sid' LIMIT 1");
+    if (mysqli_num_rows($sj)>0) {
+        $sjRow = mysqli_fetch_assoc($sj);
+        $jobid = $sjRow['jobid'];
+        $jobstatus=$sjRow['jobstatus'];
+        $jobQ = mysqli_query($host,"SELECT job_title, client,job_code FROM job WHERE id='$jobid' LIMIT 1");
+        if ($jobRow = mysqli_fetch_assoc($jobQ)) {
+            $jobTitle  = $jobRow['job_title'];
+            $jobClient = $jobRow['client'];
+            $jobcode=$jobRow['job_code'];
+        }
+    }
+
+    echo "<tr>";
+
+    $colCounter = 0;
+
+    foreach ($realColumns as $col) {
+
+        $colCounter++;
+
+        echo "<td>";
+
+        // ========================
+        // Dynamic FIELD LOGIC
+        // ========================
+        switch ($col) {
+
+            case "id":
+                echo "<a href='app_view.php?sid=".$d1[$col]."' target='_blank'>".$d1[$col]."</a>";
+                break;
+
+            case "name":
+                $full = htmlspecialchars($d1[$col]);
+                $short = strlen($full) > 20 ? substr($full,0,20)."..." : $full;
+                echo "<a href='app_view.php?sid=".$d1['id']."' target='_blank' title='$full'>$short</a>";
+                break;
+
+            case "status":
+                echo $jobstatus;
+                break;
+
+            case "address":
+                $full = htmlspecialchars($d1[$col]);
+                if ($full == "") { echo "N/A"; break; }
+                $short = strlen($full) > 12 ? substr($full,0,12)."..." : $full;
+                echo strlen($full) > 12 ? "<span title='$full'>$short</span>" : $short;
+                break;
+
+            case "date":
+                echo date("d M, Y H:i:s", strtotime($d1[$col]));
+                break;
+
+            case "ltime":
+                echo !empty($d1[$col]) ? date("d M, Y H:i:s A", strtotime($d1[$col])) : "N/A";
+                break;
+
+            default:
+                echo !empty($d1[$col]) ? htmlspecialchars($d1[$col]) : "N/A";
+        }
+
+        echo "</td>";
+
+        // ========================
+        // Insert job columns AFTER 6 dynamic columns
+        // ========================
+        if ($colCounter == 6) {
+            echo "<td>" . ($jobTitle ?: "N/A") . "</td>";
+            echo "<td>" . ($jobcode ?: "N/A") . "</td>";
+            echo "<td>" . ($jobClient ?: "N/A") . "</td>";
+        }
+    }
+
+    echo "</tr>";
+}
+
+echo "</tbody>";
+
+  ?>
 </table>
          <?php
        }
@@ -505,7 +607,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
             <tbody>
                  <?php 
       
-       $s1=mysqli_query($host,"SELECT status,COUNT(status) AS total FROM applicant where subdomain='$subdomain' and date between '$start_date' and '$end_date' GROUP BY status ORDER BY status ASC;");  
+       $s1=mysqli_query($host,"SELECT status,COUNT(status) AS total FROM applicant where subdomain='$subdomain' and date(date) between '$start_date' and '$end_date' GROUP BY status ORDER BY status ASC;");  
       while ($d1 = mysqli_fetch_array($s1)) {?>
                 <tr>
                     <td><?php echo $d1['status'];?></td>
@@ -528,7 +630,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
             </thead>
             <tbody>
                  <?php 
-                $s1=mysqli_query($host,"select createname,count(createid) as total from applicant where subdomain='$subdomain' and date between '$start_date' and '$end_date' group by createid order by createname asc");  
+                $s1=mysqli_query($host,"select createname,count(createid) as total from applicant where subdomain='$subdomain' and date(date) between '$start_date' and '$end_date' group by createid order by createname asc");  
                  while ($d1 = mysqli_fetch_array($s1)) {?>
                 <tr>
                     <td><?php echo $d1['createname'];?></td>
@@ -554,7 +656,7 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
     </thead>
     <tbody>
         <?php
-        $sql = "SELECT createname, createtype, COUNT(*) as total FROM applicant where subdomain='$subdomain' and date between '$start_date' and '$end_date' GROUP BY TRIM(LOWER(createid)), createtype ORDER BY createid";
+        $sql = "SELECT createname, createtype, COUNT(*) as total FROM applicant where subdomain='$subdomain' and date(date) between '$start_date' and '$end_date' GROUP BY TRIM(LOWER(createid)), createtype ORDER BY createid";
         $res = mysqli_query($host, $sql);
 
         $currentUser = "";
@@ -630,11 +732,11 @@ table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date, table.dataT
         <div id="responsive-overlay"></div>
  
         <!-- DATE & TIME PICKER JS -->
-        <script src="build/assets/libs/flatpickr/flatpickr.min.js"></script>
+        <script src="../build/assets/libs/flatpickr/flatpickr.min.js"></script>
 
         <!-- BOOTSTRAP JS -->
-        <script src="build/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-   <script src="build/assets/libs/apexcharts/apexcharts.min.js"></script>
+        <script src="../build/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+   <script src="../build/assets/libs/apexcharts/apexcharts.min.js"></script>
 
         <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
         

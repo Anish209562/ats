@@ -179,13 +179,46 @@
                         });
                     }
                 }
+
+  const missingRequiredApplicants = extractedDataArray.filter(item =>
+    !item ||
+    !item.email ||
+    item.email === "Not Found" ||
+    item.email === "Error" ||
+    !item.phone ||
+    item.phone === "Not Found" ||
+    item.phone === "Error"
+  );
+
+  if (missingRequiredApplicants.length === extractedDataArray.length) {
+      document.getElementById('job-loader').style.display='none';
+      showMessage("Mobile number and email are mandatory. None of the selected resumes had both fields.", 'error');
+      return;
+  }
+
+  if (missingRequiredApplicants.length > 0) {
+      showMessage(`Skipped ${missingRequiredApplicants.length} resume(s) because mobile number or email was missing.`, 'error');
+  }
+
+  const validExtractedData = extractedDataArray.filter(item =>
+    item &&
+    item.email &&
+    item.email !== "Not Found" &&
+    item.email !== "Error" &&
+    item.phone &&
+    item.phone !== "Not Found" &&
+    item.phone !== "Error"
+  );
   
   const formData = new FormData();
   validFiles.forEach((file, index) => {
-        formData.append('resume_files[]', file);
+        if (validExtractedData.includes(extractedDataArray[index])) {
+            formData.append('resume_files[]', file);
+        }
    });
- formData.append('resume_data', JSON.stringify(extractedDataArray));
-                
+ formData.append('resume_data', JSON.stringify(validExtractedData));
+         <?php if(isset($_GET['jid']) && $_GET['jid']){?> formData.append("jobid","<?php echo $_GET['jid'];?>"); <?php } ?>
+        
 $.ajax({
     url: 'data/applicant_import2.php',
     type: 'POST',        

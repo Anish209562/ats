@@ -31,7 +31,30 @@
  ?>
  <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
                         <h1 class="page-title fw-semibold fs-18 mb-0"><?php echo $pageTitle;?></h1>
-                        <div class="ms-md-1 ms-0">
+                  
+            <?php
+  if(isset($_GET['jid']) && $_GET['jid']!='' && $_GET['jid']!=0 && $ok=='4'){
+      $jidd=$_GET['jid'];
+      $jdssd=mysqli_query($host,"select job_title from job where id='$jidd' and subdomain='$subdomain'");
+      $jdskdj=mysqli_fetch_array($jdssd);
+  ?>
+  <div class="alert alert-primary alert-sm overflow-hidden p-0" role="alert" style="width: 21%;
+    position: absolute;
+    z-index: 99;
+    left: 46%;
+    top: 56px;
+    transform: translate(-6%, -1px);">
+                                                <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
+                                                    <h6 class="aletr-heading mb-0 text-fixed-white" style="font-size:14px;">Job :- <u><?php echo $jdskdj[0];?> </u></h6>
+                                                    <button type="button" class="btn-close p-0 text-fixed-white" onclick="window.location='?';" aria-label="Close"><i class="bi bi-x"></i></button>
+                                                </div>
+                                                <hr class="my-0">
+                                                <div class="p-2">
+                                                    <p class="mb-0">Applicant were Added directly to this Job Post. If don't want click on close icon</p>
+                                                </div>
+        </div>
+   <?php } ?>      
+            <div class="ms-md-1 ms-0">
                             <nav>
                                 
 <div class="dropdown" style="float:left;width:fit-content !important;margin-right:20px;">

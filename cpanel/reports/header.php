@@ -14,12 +14,18 @@ switch ($tt) {
 
     case 3: // Current Week (Monday to today)
         $start_date = date('Y-m-d', strtotime('monday this week'));
-        $end_date = $today;
+        $end_date =date('Y-m-d', strtotime('sunday this week'));
         break;
 
     case 4: // Month to Till Date (1st of current month to today)
-        $start_date = date('Y-m-01');
-        $end_date = $today;
+         if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
+            $start_date = $_GET['from_date'];
+            $end_date   = $_GET['to_date'];
+        } else {
+            // Default logic
+            $start_date = date('Y-m-01');
+            $end_date   = $today;
+        }
         break;
 
     case 5: // Current Month (full)
@@ -149,11 +155,12 @@ switch ($tt) {
         <nav aria-label="breadcrumb">
             <h4><i class="fa fa-home" style="margin-right:10px;"></i>Custom Report</h4>
             <ol class="breadcrumb breadcrumb-example1 mb-0">
-                <li class="breadcrumb-item"><a href="reports.php">All Reports</a></li>
+                <li class="breadcrumb-item"><a href="../reports.php">All Reports</a></li>
                 <li class="breadcrumb-item active"><?php echo $filename=strtoupper(basename($_SERVER['PHP_SELF'], '.php'));?></li>
                 <li class="breadcrumb-item active" aria-current="page">
                     
                     <?php
+                    $dikhana=false;
                     if(basename($_SERVER['PHP_SELF'], '.php')=='jobposting'){
                       switch($_GET['type']){
                         case "1":
@@ -169,7 +176,11 @@ switch ($tt) {
                         break;
                         
                         case "4":
-                        echo "ACTIVE JOBS ALL";
+                        echo "ACTIVE JOBS ALL";$dikhana=true;
+                        break;
+                        
+                         case 33:
+                        echo "ACTIVE JOBS with ALL Status";
                         break;
                         
                         case "5":
@@ -202,7 +213,7 @@ switch ($tt) {
                         break;
                         
                         case "3":
-                        echo "Applicant Details";
+                        echo "Applicant Details"; $dikhana=true;
                         break;
                         
                         case "9":
@@ -228,7 +239,7 @@ switch ($tt) {
                         break;
                         
                         case "3":
-                        echo "Clients All Records";
+                        echo "Clients All Records"; $dikhana=true;
                         break;
                         
                         case "4":
@@ -260,14 +271,23 @@ switch ($tt) {
                 </li>
             </ol>
         </nav>
-            <button class="btn btn-primary" type="button" onclick="window.location='index.php'">Go Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location='../reports.php'">Go Back</button>
 
     </div>
+
 <div class="header-bar">
-    <div>
+      <div>
+ <?php
+if($dikhana==true && strtolower($_SESSION['typess'])=='admin'){
+?>
+  
 <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#columnOffcanvas">
     Filter
 </button>
+
+<?php
+}
+?>
 
         
     </div>
@@ -293,8 +313,8 @@ switch ($tt) {
     </button>
     <div class="date-range-dropdown" style="gap: 10px;">
         <div class="date-input-group">
-            <input type="date" id="from-date-input" value="<?php echo date('d M, Y',strtotime($start_date));?>"/>
-            <input type="date" id="to-date-input" value="<?php echo date('d M, Y',strtotime($end_date));?>"/>
+            <input type="date" id="from-date-input" value="<?php echo date('Y-m-d',strtotime($start_date));?>"/>
+            <input type="date" id="to-date-input" value="<?php echo date('Y-m-d',strtotime($end_date));?>"/>
         </div>
         <div class="date-actions">
             <button id="apply-date-range" style="height: 35px;">✓</button>
@@ -318,18 +338,21 @@ switch ($tt) {
 
 </div>
 
+
 <div class="offcanvas offcanvas-start" tabindex="-1" id="columnOffcanvas" data-bs-backdrop="true">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title">Choose Columns</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
-     <form id="column-filter-form">
-    <div class="offcanvas-body" style="padding-bottom:0px">
+     <form id="column-filter-form" method="post" style="overflow-x: auto;">
+    <div class="offcanvas-body" style="min-height:70vh;padding-bottom:0px;">
        
-            <div id="column-checkboxes">
-                <label for="dropdownMenuButton1" class="form-label" style="width:100%;">Choose Columns*</label>
-                     <div class="dropdown dropdown-wrapper"> 
-     <input type="text"  id="selectesColumn" class="form-control dropdown-toggle"  data-bs-toggle="dropdown" data-bs-auto-close="false"  readonly=""/> 
+     <div id="column-checkboxes">
+        <label for="dropdownMenuButton1" class="form-label" style="width:100%;">Choose Columns*</label>
+    
+    <div class="dropdown dropdown-wrapper"> 
+      <input type="text" value="No Selected" id="selectesColumn" class="form-control dropdown-toggle"  data-bs-toggle="dropdown" data-bs-auto-close="false"  readonly=""/> 
+   
     <ul class="dropdown-menu"> 
     
     <li class="dropdown-item">
@@ -338,35 +361,47 @@ switch ($tt) {
      <?php
 $wantedCols = ["rate","start_job","response","country","state","date","status","city","job_type","client"];
 
-     if($filename=="JOBPOSTING"){
-         $filena="job";
+    $filename=strtolower(basename($_SERVER['PHP_SELF'], '.php'));
+    if($filename=="jobposting"){
+         $filename="job";
      }
-     else{
-         $filena=strtolower($filename);
-     }
-     $ss=mysqli_query($host,"SHOW Full COLUMNS FROM $filena");
-    $i=0;
+    
+    $ss=mysqli_query($host,"SHOW Full COLUMNS FROM $filename");
+
 $savedCols = [];
-$checkSaved = mysqli_query($host, "SELECT col FROM custom WHERE username='{$_SESSION['username']}' AND type='$filena' and report_type='1' LIMIT 1");
+$checkSaved = mysqli_query($host, "SELECT col,groups,orders FROM custom WHERE username='{$_SESSION['username']}' AND type='$filename' and report_type='1' LIMIT 1");
 if ($row = mysqli_fetch_assoc($checkSaved)) {
     $savedCols = explode(",", $row['col']); // saved column list
 }
+    $i=0;$totalCheck=0;
     while($cc=mysqli_fetch_array($ss)){
             if ($i == 0) {
             $i++;
             continue;
             }
-
+    
     $colName    = $cc['Field'];
     $colComment = strtoupper(str_replace("_", " ", $cc['Comment'] ?: $colName));
     
+    // Check conditions
+    $checked   = "";
+    $disabled  = "";
+    $isDefault = false;
+
+    // First 3 after skipping first → always checked + disabled
+    if ($i > 0 && $i <= 3) {
+        $checked  = "checked";
+        $disabled = "disabled";
+        $isDefault = true;
+    }
+
     // If column saved in custom table → checked
     if (in_array($colName, $savedCols)) {
         $checked = "checked";
         $totalCheck++;
     }
     ?>
-        <li class="dropdown-item">
+    <li class="dropdown-item">
         <label for="lang<?php echo $i; ?>"> 
             <input type="checkbox" 
                    id="lang<?php echo $i; ?>" 
@@ -378,12 +413,14 @@ if ($row = mysqli_fetch_assoc($checkSaved)) {
             <?php echo $colComment; ?>
         </label>
     </li>
-    <?php 
+    <?php
     if (in_array($colName, $wantedCols)) {
         $groupOptions[] = "<option value=\"$colName\">$colComment</option>";
     }
       $orderOptions[]="<option value=\"$colName\">$colComment</option>";
-    $i++;} ?>
+    $i++;
+    }
+    ?>
                         </ul>
                     </div>
             </div>
@@ -393,7 +430,7 @@ if ($row = mysqli_fetch_assoc($checkSaved)) {
         <div class="row">
             <div class="col-12">
                 <label>Group by</label>
-                <select name="groups" id="groups" class="form-control">
+                <select id="groups"  class="form-control" name="groups">
                     <option value="">Select Column</option>
                     <?php echo implode("\n", $groupOptions); ?>
                 </select>
@@ -401,21 +438,37 @@ if ($row = mysqli_fetch_assoc($checkSaved)) {
         </div>
         
         <hr class="mb-2"/>
-        <div class="row">
-            <div class="col-12">
-                <label>Sorted by</label>
-                <select name="orders" id="orders" class="form-control">
-                    <option value="">Select Column</option>
-                    <?php echo implode("\n", $orderOptions); ?>
-                </select>
-            </div>
-        </div>
-         <hr class="mb-4"/>
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label>Sorted by</label>
+                </div>
+        <div class="col-8 d-flex gap-3 mb-3">
+
+        <label class="form-check-label d-flex align-items-center">
+            <input class="form-check-input me-1" type="radio" name="sort_dir" value="ASC" checked>
+            ASC
+        </label>
+
+        <label class="form-check-label d-flex align-items-center">
+            <input class="form-check-input me-1" type="radio" name="sort_dir" value="DESC">
+            DESC
+        </label>
 
     </div>
-    <div class="offcanvas-footer" style="position:fixed;background: white;bottom: 0;width:49vh;padding: 10px;box-shadow: 0px -10px 12px darkgrey;">
-        <button type="submit" class="btn btn-primary">GENERATE REPORT</button>
-        <button type="button" class="btn btn-primary" id="save">SAVE REPORT</button>
+                <div class="col-12">
+                    
+                    <select id="orders"  class="form-control" name="orders">
+                        <option value="">Select Column</option>
+                        <?php echo implode("\n", $orderOptions); ?>
+                    </select>
+                </div>
+            </div>
+         <hr class="mb-4"/>
+
+
+    </div>
+    <div class="offcanvas-footer" style="padding-left:10px;padding-top:0px;padding-bottom:0px;">
+        <button type="submit" class="btn btn-primary">GENERATE & SAVE REPORT</button>
         <button type="button" class="btn btn-outline-primary"  data-bs-dismiss="offcanvas">CLOSE</button>
     </div>
     </form>
@@ -463,84 +516,12 @@ if ($row = mysqli_fetch_assoc($checkSaved)) {
 let emailString;
 
 $(document).ready(function() {
- let choices = new Choices('#team', { removeItemButton: true,placeholderValue: 'Search Team Member',searchPlaceholderValue: 'Type to search...' });
- 
- <?php
- $s=mysqli_query($host,"select email,name from team where sub_domain='meraqui' and mobile!='$username' order by name asc");
-while ($row = mysqli_fetch_assoc($s)) {
-    $locationsArray[] = [
-        'value' => $row['email'], // email as value
-        'label' => $row['name']   // name as label
-    ];
-}
- 
-  if(!empty($locationsArray)){
-?>
-let savedLocations = <?php echo json_encode($locationsArray); ?>;
-savedLocations.forEach(item => {
-  choices.setValue([{
-    value: item.value,
-    label: item.label
-  }]);
-});
-<?php
-}
-?>
-
   $("#save").click(function (){
         const jobOffcanvas = document.getElementById('addTagModal');
         const bsOffcanvas = new bootstrap.Modal(jobOffcanvas);
         bsOffcanvas.show();
   });
-$("#updatebtn").click(function (e){
-    e.preventDefault();
 
-    let selectedEmails = choices.getValue(true); // array of emails
-    emailString = selectedEmails.join(",");  // convert array → "a@x.com,b@y.com,c@z.com"
-
-    $("#column-filter-form").submit();
-});
-    $('#column-filter-form').on('submit', function(e) {
-        e.preventDefault();
-        const selectedColumns = $('#column-checkboxes input:checked').map(function() {
-            return this.value;
-        }).get();
-        var gg=$("#groups").val();
-        var ord=$("#orders").val();
-        
-        var rr=$("#report").val();
-        var ddee=$("#descr").val();
-        $('#loader').show();
-        $.ajax({
-            url: 'data/custom.php',
-            method: 'POST',
-            data: { columns: selectedColumns,table:"<?php echo $ok;?>",type:"1",rr:rr, ddee:ddee,email:emailString,gg:gg,ord:ord},
-            success: function(response) {
-                $("#dataedit").html(response);
-                
-            }
-        });
-
-    });
-
-  $('#column-checkboxes .dropdown-check:checked').each(function () {
-    const name = $(this).data('name');
-    const value = $(this).val();
-
-    if ($('#column_output').find(`[data-value="${value}"]`).length === 0) {
-     $('#column_output').append(`
-  <div class="column-tag" data-value="${value}" ${$(this).is(':disabled') ? 'style="justify-content: left; gap: 21px;"' : ''}>
-    <span class="col-number"></span> ${name}
-    ${$(this).is(':disabled') ? '' : '<button type="button" class="remove-btn">&times;</button>'}
-  </div>
-`);
-
-    }
-  });
-
-  $('#column_output .column-tag').each(function (i) {
-    $(this).find('.col-number').text((i + 1) + ". ");
-  });
 $("#selectesColumn").val("<?php echo $totalCheck." of ".$i." selected";?>");  
 
 });
@@ -636,4 +617,187 @@ window.onload = function () {
 });
 
 </script>
-    
+<?php
+if(isset($_GET['type']) && $_GET['type']=='3'){
+?>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+$(document).ready(function () {
+ 
+ $(document).on("click", "#selectesColumn", function () {
+    var dropdown = new bootstrap.Dropdown(this);
+    dropdown.toggle();
+});
+
+  function $menuWrapper() {
+    return $('#column-checkboxes');
+  }
+
+  $menuWrapper().find('.dropdown-check:not(.select-all):checked').each(function () {
+    const name = $(this).data('name') || $(this).val();
+    const value = $(this).val();
+
+    if ($('#column_output').find(`[data-value="${value}"]`).length === 0) {
+        
+             $('#column_output').append(`
+  <div class="column-tag" data-value="${value}" ${$(this).is(':disabled') ? 'style="justify-content: left; gap: 21px;"' : ''}>
+    <span class="col-number"></span> ${name}
+    ${$(this).is(':disabled') ? '' : '<button type="button" class="remove-btn">&times;</button>'}
+  </div>
+`);
+
+   
+    }
+  });
+
+  updateNumbers();
+
+  $('#column-filter-form').on('submit', function (e) {
+    e.preventDefault();
+
+    const selectedColumns = $('#column-checkboxes input.dropdown-check:checked').not('.select-all').map(function () { return this.value; }).get();
+        var gg=$("#groups").val();
+        var ord=$("#orders").val();
+        var sortDir = $('input[name="sort_dir"]:checked').val(); 
+
+        
+    $('#loader').show && $('#loader').show();
+
+    $.ajax({
+      url: '../data/custom.php',
+      method: 'POST',
+      data: { columns: selectedColumns, table: "<?php echo $ok; ?>",type:"1",gg:gg,ord:ord,sort:sortDir },
+      success: function (response) {
+        $("#dataedit").html(response);
+        $('#loader').hide && $('#loader').hide();
+      },
+      error: function () { $('#loader').hide && $('#loader').hide(); }
+    });
+  });
+
+  $menuWrapper().on('change', '.dropdown-check', function () {
+    const $this = $(this);
+    const isSelectAll = $this.hasClass('select-all');
+    const $menu = $this.closest('.dropdown-menu');
+    const $allChecks = $menu.find('.dropdown-check').not('.select-all');
+
+    if (isSelectAll) {
+      // If select-all toggled, set all the other checkboxes and trigger change
+      if ($this.is(':checked')) {
+        $allChecks.each(function () {
+          if (!$(this).is(':checked')) {
+            $(this).prop('checked', true).trigger('change');
+          }
+        });
+      } else {
+        $allChecks.each(function () {
+          if ($(this).is(':checked')) {
+            $(this).prop('checked', false).trigger('change');
+          }
+        });
+      }
+      // update the label
+      updateNumbers();
+      return;
+    }
+
+    // Normal checkbox toggled
+    const name = $this.data('name') || $this.val();
+    const value = $this.val();
+
+    if ($this.is(':checked')) {
+      // append tag if not exists
+      if ($('#column_output').find(`[data-value="${value}"]`).length === 0) {
+        $('#column_output').append(`
+          <div class="column-tag" data-value="${value}">
+            <span class="col-number"></span> ${name}
+            ${$this.is(':disabled') ? '' : '<button type="button" class="remove-btn">&times;</button>'}
+          </div>
+        `);
+      }
+    } else {
+      // remove tag
+      $('#column_output').find(`[data-value="${value}"]`).remove();
+    }
+
+    // update select-all checkbox state and the label
+    updateNumbers($allChecks, $menu.find('.select-all'), $menu.closest('.dropdown-wrapper').find('.dropdown-toggle'));
+  });
+
+  $('#column_output').on('click', '.remove-btn', function () {
+    const $tag = $(this).closest('.column-tag');
+    const value = $tag.data('value').toString();
+    $tag.remove();
+
+    // Uncheck checkbox too (match value safely)
+    const $checkbox = $menuWrapper().find(`.dropdown-check[value="${value}"]`);
+    $checkbox.prop('checked', false).trigger('change');
+
+    // update numbers (updateNumbers will compute from DOM if no args)
+    updateNumbers();
+  });
+
+  if ($.fn.sortable) {
+    $('#column_output').sortable({
+      update: function () {
+        updateNumbers(); // reorder numbers after drag-drop
+      }
+    });
+    $('#column_output').disableSelection();
+  } else {
+    console.warn("jQuery UI sortable is not loaded. Include jQuery UI for drag & drop ordering.");
+  }
+
+  function updateNumbers($allChecks, $selectAll, $input) {
+    // numbers in output
+    $('#column_output .column-tag').each(function (i) {
+      $(this).find('.col-number').text((i + 1) + ". ");
+    });
+
+    // compute the menu controls if not provided
+    if (!$allChecks) {
+      $allChecks = $menuWrapper().find('.dropdown-menu .dropdown-check').not('.select-all');
+    }
+    if (!$selectAll) {
+      $selectAll = $menuWrapper().find('.dropdown-menu .select-all');
+    }
+    if (!$input) {
+      $input = $menuWrapper().find('.dropdown-toggle');
+    }
+
+    const total = $allChecks.length;
+    const checkedCount = $allChecks.filter(':checked').length;
+
+    // set select-all checked when all individual checks are checked
+    if ($selectAll.length) $selectAll.prop('checked', total > 0 && checkedCount === total);
+
+    // set the dropdown input label
+    if ($input.length) {
+      if (checkedCount === total && total > 0) {
+        $input.val("All Selected");
+      } else {
+        $input.val(checkedCount + " of " + total + " selected");
+      }
+    }
+  }
+
+  $('.dropdown-menu').on('click', function (e) {
+    e.stopPropagation();
+  });
+
+  $(document).on('click', function (e) {
+    if (!$(e.target).closest('.dropdown-wrapper').length) {
+      $('.dropdown-menu').removeClass('show');
+    }
+  });
+
+});
+</script>
+
+<?php
+}
+?>
