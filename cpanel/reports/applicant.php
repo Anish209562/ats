@@ -1,6 +1,5 @@
 <?php include("../session.php");
-
-
+$reportBaseUrl = rtrim(str_replace("\\", "/", dirname($_SERVER['SCRIPT_NAME'])), '/') . '/';
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-nav-layout="horizontal" data-theme-mode="light" data-header-styles="light" data-menu-styles="dark" data-toggled="close">
@@ -9,6 +8,7 @@
 
         <!-- META DATA -->
 		<meta charset="UTF-8">
+        <base href="<?php echo htmlspecialchars($reportBaseUrl, ENT_QUOTES); ?>">
 		
         <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -547,13 +547,13 @@ while ($d1 = mysqli_fetch_assoc($appQ)) {
         switch ($col) {
 
             case "id":
-                echo "<a href='app_view.php?sid=".$d1[$col]."' target='_blank'>".$d1[$col]."</a>";
+                echo "<a href='../app_view.php?sid=".$d1[$col]."' target='_blank'>".$d1[$col]."</a>";
                 break;
 
             case "name":
                 $full = htmlspecialchars($d1[$col]);
                 $short = strlen($full) > 20 ? substr($full,0,20)."..." : $full;
-                echo "<a href='app_view.php?sid=".$d1['id']."' target='_blank' title='$full'>$short</a>";
+                echo "<a href='../app_view.php?sid=".$d1['id']."' target='_blank' title='$full'>$short</a>";
                 break;
 
             case "status":

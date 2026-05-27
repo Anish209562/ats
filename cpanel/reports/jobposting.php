@@ -1,6 +1,5 @@
 <?php include("../session.php");
-
-
+$reportBaseUrl = rtrim(str_replace("\\", "/", dirname($_SERVER['SCRIPT_NAME'])), '/') . '/';
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-nav-layout="horizontal" data-theme-mode="light" data-header-styles="light" data-menu-styles="dark" data-toggled="close">
@@ -9,6 +8,7 @@
 
         <!-- META DATA -->
 		<meta charset="UTF-8">
+        <base href="<?php echo htmlspecialchars($reportBaseUrl, ENT_QUOTES); ?>">
 	
         <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -352,7 +352,7 @@ include("header.php");
                 <tr>
                     <td><?php echo $d1['client'];?></td>
                     <td><?php echo $d1['job_title'];?></td>
-                    <td><a href="job_view.php?sid=<?php echo $d1['id'];?>" target="_blank" class="table-link"><?php echo $d1['job_code'];?></a></td>
+                    <td><a href="../job_view.php?sid=<?php echo $d1['id'];?>" target="_blank" class="table-link"><?php echo $d1['job_code'];?></a></td>
                     <td><?php echo $d1['assigned'];?></td>
                     <td><?php echo $d1['recrutment'];?></td>
                     <td><?php echo $d1['status'];?> - Today</td>
@@ -384,7 +384,7 @@ include("header.php");
  
     while ($d1 = mysqli_fetch_array($s1)) {?>
                 <tr>
-                    <td><a href="client_view.php?sid=<?php echo $d1['id'];?>" target="_blank"><?php echo $d1['client'];?></a></td>
+                    <td><a href="../client_view.php?sid=<?php echo $d1['id'];?>" target="_blank"><?php echo $d1['client'];?></a></td>
                     <td><?php echo $d1['totalActivejob'];?></td>
                     <td><?php echo "0";?></td>
                     <td><?php echo 0;?></td>
@@ -451,8 +451,8 @@ $tooltipText = '["' . implode('","', $states) . '"]';
 
             echo "<tr>
                 <td></td>
-                <td><a href='job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_code']}</a></td>
-                <td><a href='job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_title']}</a></td>
+                <td><a href='../job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_code']}</a></td>
+                <td><a href='../job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_title']}</a></td>
                 <td>{$d1['status']}</td>
                 <td>{$d1['bill_type']}/{$d1['rate']}/{$d1['bill_time']}</td>
                 <td>0</td>
@@ -572,8 +572,8 @@ $tooltipText = '["' . implode('","', $states) . '"]';
             // -------------------------
             echo "<tr>
                 <td></td>
-                <td><a href='job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_code']}</a></td>
-                <td><a href='job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_title']}</a></td>
+                <td><a href='../job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_code']}</a></td>
+                <td><a href='../job_view.php?sid={$d1['id']}' target='_blank'>{$d1['job_title']}</a></td>
                 <td>{$d1['client']}</td>
                 
                 <td>{$d1['bill_type']}/{$d1['rate']}/{$d1['bill_time']}</td>
@@ -692,11 +692,11 @@ $tooltipText = '["' . implode('","', $states) . '"]';
             switch ($col) {
 
                 case "job_code":
-                    echo '<a href="job_view.php?sid='.$d1['id'].'" target="_blank">'.$d1[$col].'</a>';
+                    echo '<a href="../job_view.php?sid='.$d1['id'].'" target="_blank">'.$d1[$col].'</a>';
                     break;
 
                 case "job_title":
-                    echo '<a href="job_view.php?sid='.$d1['id'].'" target="_blank">'.$d1[$col].'</a>';
+                    echo '<a href="../job_view.php?sid='.$d1['id'].'" target="_blank">'.$d1[$col].'</a>';
                     break;
 
                 case "bill_type":
