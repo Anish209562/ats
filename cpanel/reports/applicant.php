@@ -496,8 +496,9 @@ foreach ($commentColumns as $i => $head) {
 
     // After 6 headings → insert job columns
     if ($colCounter == 6) {
+        echo "<th>Profile Status</th>";
         echo "<th>Job Title</th>";
-         echo "<th>Job Code</th>";
+        echo "<th>Job Code</th>";
         echo "<th>Client Name</th>";
     }
 }
@@ -512,7 +513,10 @@ while ($d1 = mysqli_fetch_assoc($appQ)) {
     $sid = $d1['id'];
 
     $jobTitle = "N/A";
-    $jobClient = "N/A";$jobstatus="N/A";
+    $jobClient = "N/A";
+    $jobcode = "N/A";
+    $jobstatus = "N/A";
+    $profileStatus = !empty($d1['status']) ? $d1['status'] : "N/A";
 
     $sj = mysqli_query($host,"SELECT jobid,status as jobstatus FROM submitjob WHERE sid='$sid' LIMIT 1");
     if (mysqli_num_rows($sj)>0) {
@@ -581,6 +585,7 @@ while ($d1 = mysqli_fetch_assoc($appQ)) {
         // Insert job columns AFTER 6 dynamic columns
         // ========================
         if ($colCounter == 6) {
+            echo "<td>" . htmlspecialchars($profileStatus) . "</td>";
             echo "<td>" . ($jobTitle ?: "N/A") . "</td>";
             echo "<td>" . ($jobcode ?: "N/A") . "</td>";
             echo "<td>" . ($jobClient ?: "N/A") . "</td>";

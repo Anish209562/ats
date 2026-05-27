@@ -627,6 +627,20 @@ if ($hasCustom) {
         $ord="order by $orders asc";
     }
 
+    if (!in_array('id', $realColumns, true)) {
+        array_unshift($realColumns, 'id');
+        array_unshift($commentColumns, 'ID');
+        $tcolList = "job.id," . ltrim($tcolList, ',');
+    }
+
+    if (!in_array('position', $realColumns, true)) {
+        $insertAt = array_search('status', $realColumns, true);
+        $insertAt = ($insertAt === false) ? count($realColumns) : $insertAt + 1;
+        array_splice($realColumns, $insertAt, 0, ['position']);
+        array_splice($commentColumns, $insertAt, 0, ['No of Roles']);
+        $tcolList .= (trim($tcolList) !== '' ? ',' : '') . 'job.position';
+    }
+
 } else {
     $showColumn = ['id','job_code','job_title','start_job','priority','assigned','status','position','client','c_manager','date','ltime', 'createname']; // <-- your choices
 
@@ -653,7 +667,7 @@ if ($hasCustom) {
     if ($realCol === 'id') continue; // skip 'id' column
 ?>
     <th data-col="<?= htmlspecialchars($realCol) ?>">
-        <?php echo $realCol!="position" ? htmlspecialchars($colHead) : "No. of Position"; ?>
+        <?php echo $realCol!="position" ? htmlspecialchars($colHead) : "No of Roles"; ?>
     </th>
 <?php } ?>
         </tr>

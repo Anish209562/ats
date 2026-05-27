@@ -116,8 +116,13 @@ $status=$_POST['job_status'];
 $limit_main=$_POST['limit_main'];
 
 
-
-if($update){ 
+if (trim($position) == '') {
+    $m="No of Roles is required";
+    $icon="error";
+} else if (trim($startjob) == '') {
+    $m="Job Start Date is required";
+    $icon="error";
+} else if($update){ 
     
 $idds=$update;
 $q="update job SET min_exp='$min_exp', max_exp='$max_exp',job_code='$code', job_title='$title', bill_type='$billtype', bill_time='$billtime',rate='$rate', start_job='$startjob', end_job='$endjob', response='$response', remote='$remote', expense='$expense', country='$country', state='$state',  ltime='$dateTime', status='$status', city='$city', pincode='$pin', district='$district', job_type='$jobtype', hours='$hours', client='$client', cid='$cid', c_manager='$cmanager', priority='$priority', notice='$notice', employee='$employee', position='$position', max='$maxx', sales='$salesname', sales_email='$salesemail', recrutment='$recrutname', recrutment_email='$recrutemail', account='$accountname',account_email='$accountemail',assigned='$assignname', assigned_email='$assignemail', comments='$comments', publish='$publish', job_desc='$jobdesc' ,document='$document', degree='$degree', indus='$indus', language='$lang' ,remark='$remark',primarys='$primary', secondary='$secondary' ,limit_main='$limit_main', response_date='$respdate', address='$locations', salary_type='$salarycurrency', salary_time='$salarytime', salary_max='$maxsalary', salary_min='$minsalary' where subdomain='$subdomain' and id='$update'";
@@ -178,7 +183,7 @@ if ($last != '') {
 $("#loader").css("display","none");
 Swal.fire({
     position: "top-center",
-    icon: "success",
+    icon: "<?php echo $icon; ?>",
     title: "<?php echo $m; ?>",
     showConfirmButton: false,
     timer: 2000
@@ -195,4 +200,3 @@ $("#staticBackdrop").css("display",'none');
 <?php
 }
 ?>
-

@@ -994,21 +994,29 @@ $("#response").on("change",function (){
 $("#postform1").on("submit",function (e){
     e.preventDefault();
     if (gameEditor2) $('#remark').val(gameEditor2.getData());
-     if (gameEditor3) $('#job_desc').val(gameEditor3.getData());
-              $('#loader').css("display","block");
-                    $.ajax({
-                        url: "data/post_data.php",
-                        type: "POST",
-                        data: $("#postform1").serialize(),
-                        success: function(html) {
-                        $('#loader').hide();
-                        $("#mistable").text("");
-                        $("#mistable").prepend(html);
-                        },
-                        error: function() {
-                            $('#loader').hide();
-                        }
-                    });
+    if (gameEditor3) $('#job_desc').val(gameEditor3.getData());
+
+    const startJob = $("#start_job").val().trim();
+    if (!startJob) {
+        $("#start_job").addClass("is-invalid").trigger("focus");
+        return false;
+    }
+    $("#start_job").removeClass("is-invalid");
+
+    $('#loader').css("display","block");
+    $.ajax({
+        url: "data/post_data.php",
+        type: "POST",
+        data: $("#postform1").serialize(),
+        success: function(html) {
+            $('#loader').hide();
+            $("#mistable").text("");
+            $("#mistable").prepend(html);
+        },
+        error: function() {
+            $('#loader').hide();
+        }
+    });
 });
 
 
@@ -1062,5 +1070,4 @@ $("#postform1").on("submit",function (e){
 });
 
 </script>
-
 
