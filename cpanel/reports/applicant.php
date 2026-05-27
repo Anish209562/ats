@@ -1,4 +1,8 @@
-<?php include("../session.php");
+<?php
+ob_start(function ($buffer) {
+    return preg_replace('/<base\b[^>]*>/i', '', $buffer);
+});
+include("../session.php");
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-nav-layout="horizontal" data-theme-mode="light" data-header-styles="light" data-menu-styles="dark" data-toggled="close">
