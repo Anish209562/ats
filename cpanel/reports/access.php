@@ -1,5 +1,4 @@
 <?php include("../session.php");
-$reportBaseUrl = rtrim(str_replace("\\", "/", dirname($_SERVER['SCRIPT_NAME'])), '/') . '/';
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-nav-layout="horizontal" data-theme-mode="light" data-header-styles="light" data-menu-styles="dark" data-toggled="close">
@@ -8,7 +7,6 @@ $reportBaseUrl = rtrim(str_replace("\\", "/", dirname($_SERVER['SCRIPT_NAME'])),
 
         <!-- META DATA -->
 		<meta charset="UTF-8">
-        <base href="<?php echo htmlspecialchars($reportBaseUrl, ENT_QUOTES); ?>">
 		
         <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
