@@ -1,0 +1,6 @@
+# Uploaded applicant resumes/photos — large, not part of the app code
+cpanel/img/
+
+# macOS
+.DS_Store
+

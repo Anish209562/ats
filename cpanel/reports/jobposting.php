@@ -609,6 +609,11 @@ $tooltipText = '["' . implode('","', $states) . '"]';
 $customRes = mysqli_query($host, "SELECT * FROM custom WHERE username='$username' AND type='job' and report_type='1' LIMIT 1");
 $hasCustom = mysqli_num_rows($customRes) > 0;
 
+// 'position' column ka heading DB ke column-comment se aata hai (hardcode nahi)
+$posColRes = mysqli_query($host, "SHOW FULL COLUMNS FROM `job` WHERE Field='position'");
+$posColRow = mysqli_fetch_assoc($posColRes);
+$positionLabel = !empty($posColRow['Comment']) ? $posColRow['Comment'] : 'Number of Positions';
+
 $realColumns = [];
 $commentColumns = [];
 $qualifiedColumns = [];
@@ -639,7 +644,7 @@ if ($hasCustom) {
         $insertAt = array_search('status', $realColumns, true);
         $insertAt = ($insertAt === false) ? count($realColumns) : $insertAt + 1;
         array_splice($realColumns, $insertAt, 0, ['position']);
-        array_splice($commentColumns, $insertAt, 0, ['No of Roles']);
+        array_splice($commentColumns, $insertAt, 0, [$positionLabel]);
         $tcolList .= (trim($tcolList) !== '' ? ',' : '') . 'job.position';
     }
 
@@ -669,7 +674,7 @@ if ($hasCustom) {
     if ($realCol === 'id') continue; // skip 'id' column
 ?>
     <th data-col="<?= htmlspecialchars($realCol) ?>">
-        <?php echo $realCol!="position" ? htmlspecialchars($colHead) : "No of Roles"; ?>
+        <?php echo htmlspecialchars($colHead); ?>
     </th>
 <?php } ?>
         </tr>
