@@ -18,7 +18,7 @@ function generatePassword($minLength = 6, $maxLength = 13) {
     $allChars = $numbers . $symbols . $letters;
     
     // Ensure at least one from each category
-    $password  = $numbers[rand(0, strlen($numbers) - 1)];
+    $password=$numbers[rand(0, strlen($numbers) - 1)];
     $password .= $symbols[rand(0, strlen($symbols) - 1)];
     $password .= $letters[rand(0, strlen($letters) - 1)];
     
@@ -117,7 +117,7 @@ else{
 $passkey = generatePassword();
 $password=md5($passkey);
 
-$q="insert into onboarding set name='$name',lname='$lname', middle='$middle',email='$email', mobile='$mobile', address='$address', gender='$gender',country='$country',state='$state', city='$city', pincode='$pin', doj='$doj', etype='$etype', vendor='$vendor', vendor_email='$vendoremail', job_title='$job', start='$start', end='$end', client='$client', clientid='$cid', tax='$tax', currency='$currency', bill_rate='$brate', bill_rate_type='$brate_type', pay_rate='$pay', pay_rate_type='$pay_rate', ot_bill_rate='$ot_b_rate', ot_pay_rate='$ot_p_rate', dt_bill_rate='$dt_b_rate', dt_pay_rate='$dt_p_rate', diem='$diem', diem_type='$diemtype' ,subdomain='$subdomain', date='$date',time='$time' , createid='$username', createname='$create',status='initiated',password='$password', passkey='$passkey'";
+$q="insert into onboarding set name='$name',lname='$lname', middle='$middle',email='$email', mobile='$mobile', address='$address', gender='$gender',country='$country',state='$state', city='$city', pincode='$pin', doj='$doj', etype='$etype', vendor='$vendor', vendor_email='$vendoremail', job_title='$job', start='$start', end='$end', client='$client', clientid='$cid', tax='$tax', currency='$currency', bill_rate='$brate', bill_rate_type='$brate_type', pay_rate='$pay', pay_rate_type='$pay_rate', ot_bill_rate='$ot_b_rate', ot_pay_rate='$ot_p_rate', dt_bill_rate='$dt_b_rate', dt_pay_rate='$dt_p_rate', diem='$diem', diem_type='$diemtype' ,subdomain='$subdomain', date='$date',time='$time' , createid='$username', createname='$create',status='initiated',`password`='$password', passkey='$passkey'";
  
 if(mysqli_query($host,"$q")){
 $ss=mysqli_query($host,"select id,passkey,client,job_title from onboarding order by id desc limit 1");

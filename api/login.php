@@ -32,7 +32,7 @@ if($username){
 
 
     
-    $sql=mysqli_query($host,"select * from user where mobile='$username' and (password='$password' or password='$pass')");
+    $sql=mysqli_query($host,"select * from user where mobile='$username' and (`password`='$password' or `password`='$pass')");
     $like=mysqli_fetch_array($sql);
     $r=mysqli_num_rows($sql);
     if($r==1){

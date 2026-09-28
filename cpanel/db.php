@@ -5,6 +5,10 @@ date_default_timezone_set('Asia/Kolkata');
 $date=date('Y-m-d');
 $time=date('H:i:s'); 
 $subdomain="meraqui";
+$ats_health_endpoint = '/health';
+$ats_readiness_endpoint = '/readiness';
+$ats_metrics_endpoint = '/metrics';
+$ats_validation_profile = 'jsonschema';
 
 if (!function_exists('ats_normalize_email')) {
     function ats_normalize_email($email) {

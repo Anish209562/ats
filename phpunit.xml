@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true" cacheDirectory=".phpunit.cache">
+  <testsuites>
+    <testsuite name="PHP unit tests">
+      <directory suffix="Test.php">tests/php</directory>
+    </testsuite>
+  </testsuites>
+  <coverage>
+    <include>
+      <directory suffix=".php">api</directory>
+      <directory suffix=".php">cpanel</directory>
+      <directory suffix=".php">data</directory>
+    </include>
+  </coverage>
+</phpunit>

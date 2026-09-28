@@ -1,0 +1,31 @@
+version: 2.1
+
+jobs:
+  quality:
+    docker:
+      - image: cimg/php:8.2-node
+    steps:
+      - checkout
+      - run:
+          name: Install Composer dependencies
+          command: composer install --prefer-dist --no-progress
+      - run:
+          name: Validate Composer files
+          command: composer validate --strict
+      - run:
+          name: Lint
+          command: composer run lint
+      - run:
+          name: Typecheck
+          command: composer run typecheck
+      - run:
+          name: Test
+          command: composer run test
+      - run:
+          name: Dependency audit
+          command: composer audit
+
+workflows:
+  quality:
+    jobs:
+      - quality

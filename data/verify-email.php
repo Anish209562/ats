@@ -4,7 +4,7 @@ $otp=$_POST['otp'];
 $pass=$_POST['pass'];
 if($pass){
 $password=md5($_POST['pass']);
-mysqli_query($host,"update register set password='$password' where email='$email'");
+mysqli_query($host,"update register set `password`='$password' where email='$email'");
 ?>
 <script>
 document.getElementById("emaildiv").style.display="block";	

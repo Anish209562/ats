@@ -64,7 +64,7 @@ $photoData = base64_decode($photo);
   $fileName=$ch['photo'];
 }
 
- $q="update user set photo='$fileName', name='$name',mobile='$mobile', password='$password',email='$email',address='$address',dob='$dob',mstatus='$mstatus',occu='$occupation',aadhar='$aadhar_id',pan='$pan_id',gender='$gender', pincode='$pincode', status='$status', ltime='$dateTime', plan='$card_stage',user='$userrole', education='$education'  , F_member='$family1', family2='$family2', family3='$family3', vehicle='$vehicle1',  vehicle2='$vehicle2', vehicle3='$vehicle3' where id='$update'"; 
+ $q="update user set photo='$fileName', name='$name',mobile='$mobile', `password`='$password',email='$email',address='$address',dob='$dob',mstatus='$mstatus',occu='$occupation',aadhar='$aadhar_id',pan='$pan_id',gender='$gender', pincode='$pincode', status='$status', ltime='$dateTime', plan='$card_stage',user='$userrole', education='$education'  , F_member='$family1', family2='$family2', family3='$family3', vehicle='$vehicle1',  vehicle2='$vehicle2', vehicle3='$vehicle3' where id='$update'"; 
 
 mysqli_query($host,"$q");
 

@@ -20,7 +20,7 @@ $state=$data['type'];
 $s=mysqli_query($host,"select * from otp_verification where email='$email' and eotp='$eotp' and mobile='$mobile' and motp='$motp' order by id desc");
 $r=mysqli_num_rows($s);
 if($r==1){
-if(mysqli_query($host,"insert into register set email='$email',password='$password',username='$username',name='$name',gender='$gender',city='$city',state='$state',pincode='$pincode',business_type='$btype',business_name='$gst',mobile='$mobile',business_category='$bcate',date='$date',time='$time',project='SMS Portal',authkey='$key'")){
+if(mysqli_query($host,"insert into register set email='$email',`password`='$password',username='$username',name='$name',gender='$gender',city='$city',state='$state',pincode='$pincode',business_type='$btype',business_name='$gst',mobile='$mobile',business_category='$bcate',date='$date',time='$time',project='SMS Portal',authkey='$key'")){
 ?>
 <script> $(document).ready(function(e){
 

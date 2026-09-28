@@ -1,0 +1,26 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      APP_ENV: local
+      DB_HOST: db
+      DB_DATABASE: ats
+      DB_USERNAME: ats_user
+      DB_PASSWORD: ats_password
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: ats
+      MARIADB_USER: ats_user
+      MARIADB_PASSWORD: ats_password
+      MARIADB_ROOT_PASSWORD: root_password
+    volumes:
+      - ats-db:/var/lib/mysql
+
+volumes:
+  ats-db:

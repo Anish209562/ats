@@ -54,7 +54,7 @@ $m="Successfully Updated";
 $passkey=uniqid().substr(time(),6,5).substr(uniqid(),1,5);
 $password=md5($passkey);
 
-$q="insert into team set password='$password', passkey='$passkey', manager='$managername', managere='$manageemail',sub_domain='$subdomain',name='$name', mobile='$mobile', email='$email', staffid='$sid', position='$position', department='$department',path='$fileName',status='Active',date='$date',time='$time'";
+$q="insert into team set `password`='$password', passkey='$passkey', manager='$managername', managere='$manageemail',sub_domain='$subdomain',name='$name', mobile='$mobile', email='$email', staffid='$sid', position='$position', department='$department',path='$fileName',status='Active',date='$date',time='$time'";
 
 mysqli_query($host,"$q");
 $check=true;

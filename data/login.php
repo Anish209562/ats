@@ -2,7 +2,7 @@
 include("../cpanel/db.php");
 $username=$_POST['username'];
 $password=md5($_POST['password']);
-$s=mysqli_query($host,"select * from register where username='$username' and password='$password'");
+$s=mysqli_query($host,"select * from register where username='$username' and `password`='$password'");
 $r=mysqli_num_rows($s);
 if($r==1){
 $token=uniqid().time();

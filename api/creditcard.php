@@ -36,7 +36,7 @@ if($domain){
                 {
                     
             
-    	mysqli_query($host,"INSERT INTO user set mobile='$cnumber',user='$number',name='$name',email='$email',gender='$gender',address='$address',dob='$dob',password='$password',subdomain='$domain',date='$date',pincode='$pincode',city='$city',state='$state',status='Active',time='$time'");
+    	mysqli_query($host,"INSERT INTO user set mobile='$cnumber',user='$number',name='$name',email='$email',gender='$gender',address='$address',dob='$dob',`password`='$password',subdomain='$domain',date='$date',pincode='$pincode',city='$city',state='$state',status='Active',time='$time'");
     
     	
     	

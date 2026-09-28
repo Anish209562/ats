@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ruleset name="ATS">
+  <description>ATS PHP coding standard for legacy maintenance.</description>
+  <rule ref="PSR12"/>
+  <exclude-pattern>cpanel/vendor/*</exclude-pattern>
+  <exclude-pattern>cpanel/build/*</exclude-pattern>
+  <exclude-pattern>api/backup/*</exclude-pattern>
+</ruleset>

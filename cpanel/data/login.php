@@ -8,7 +8,7 @@ $subdomain="meraqui";
 // subadmin
 if(strpos($username, "@")!=false and strpos($username,".")!=false) {
     $password=md5(trim($password));
-    $aa = "SELECT * FROM team WHERE email='$username' AND password = '$password' AND status='Active'";
+    $aa = "SELECT * FROM team WHERE email='$username' AND `password`='$password' AND status='Active'";
     $stmt = mysqli_query($host, $aa);
    $count = mysqli_num_rows($stmt);
     $data = mysqli_fetch_array($stmt);
@@ -50,7 +50,7 @@ Swal.fire({
 
 else{
 $password=md5($password);
-$s=mysqli_query($host,"select * from register where username='$username' and password='$password'");
+$s=mysqli_query($host,"select * from register where username='$username' and `password`='$password'");
 $r=mysqli_num_rows($s);
 if($r==1){
 $ip=$_SERVER['REMOTE_ADDR'];

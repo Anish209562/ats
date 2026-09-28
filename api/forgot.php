@@ -15,7 +15,7 @@ if($obj['password']){
 $s1=mysqli_query($host,"select * from otp where username='$mobile' and otpcode='$rotp' and sub_domain='$domain'");
 if(mysqli_num_rows($s1)==1){
 
-mysqli_query($host,"update user set password='$pass' where subdomain='$domain' and mobile='$mobile'");    
+mysqli_query($host,"update user set `password`='$pass' where subdomain='$domain' and mobile='$mobile'");    
  $arr['status']=true;
 $arr['message']="success";
 echo json_encode($arr); 

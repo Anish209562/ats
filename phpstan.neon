@@ -1,0 +1,10 @@
+parameters:
+  level: 0
+  paths:
+    - api
+    - cpanel
+    - data
+  excludePaths:
+    - cpanel/vendor
+    - cpanel/build
+    - api/backup

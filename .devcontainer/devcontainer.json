@@ -1,0 +1,10 @@
+{
+  "name": "ATS PHP",
+  "image": "mcr.microsoft.com/devcontainers/php:8.2",
+  "postCreateCommand": "composer install --prefer-dist --no-progress",
+  "customizations": {
+    "vscode": {
+      "extensions": ["bmewburn.vscode-intelephense-client"]
+    }
+  }
+}
